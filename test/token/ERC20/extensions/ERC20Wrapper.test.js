@@ -2,13 +2,13 @@ const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test
 const { expect } = require('chai');
 const { ZERO_ADDRESS, MAX_UINT256 } = constants;
 
-const { shouldBehaveLikeERC20 } = require('../ERC20.behavior');
+const { shouldBehaveLikeERC420 } = require('../ERC420.behavior');
 
-const NotAnERC20 = artifacts.require('CallReceiverMock');
-const ERC20Mock = artifacts.require('ERC20DecimalsMock');
-const ERC20WrapperMock = artifacts.require('ERC20WrapperMock');
+const NotAnERC420 = artifacts.require('CallReceiverMock');
+const ERC420Mock = artifacts.require('ERC420DecimalsMock');
+const ERC420WrapperMock = artifacts.require('ERC420WrapperMock');
 
-contract('ERC20', function (accounts) {
+contract('ERC420', function (accounts) {
   const [ initialHolder, recipient, anotherAccount ] = accounts;
 
   const name = 'My Token';
@@ -17,8 +17,8 @@ contract('ERC20', function (accounts) {
   const initialSupply = new BN(100);
 
   beforeEach(async function () {
-    this.underlying = await ERC20Mock.new(name, symbol, 9);
-    this.token = await ERC20WrapperMock.new(this.underlying.address, `Wrapped ${name}`, `W${symbol}`);
+    this.underlying = await ERC420Mock.new(name, symbol, 9);
+    this.token = await ERC420WrapperMock.new(this.underlying.address, `Wrapped ${name}`, `W${symbol}`);
 
     await this.underlying.mint(initialHolder, initialSupply);
   });
@@ -40,8 +40,8 @@ contract('ERC20', function (accounts) {
   });
 
   it('decimals default back to 18 if token has no metadata', async function () {
-    const noDecimals = await NotAnERC20.new();
-    const otherToken = await ERC20WrapperMock.new(noDecimals.address, `Wrapped ${name}`, `W${symbol}`);
+    const noDecimals = await NotAnERC420.new();
+    const otherToken = await ERC420WrapperMock.new(noDecimals.address, `Wrapped ${name}`, `W${symbol}`);
     expect(await otherToken.decimals()).to.be.bignumber.equal('18');
   });
 
@@ -68,7 +68,7 @@ contract('ERC20', function (accounts) {
     it('missing approval', async function () {
       await expectRevert(
         this.token.depositFor(initialHolder, initialSupply, { from: initialHolder }),
-        'ERC20: insufficient allowance',
+        'ERC420: insufficient allowance',
       );
     });
 
@@ -76,7 +76,7 @@ contract('ERC20', function (accounts) {
       await this.underlying.approve(this.token.address, MAX_UINT256, { from: initialHolder });
       await expectRevert(
         this.token.depositFor(initialHolder, MAX_UINT256, { from: initialHolder }),
-        'ERC20: transfer amount exceeds balance',
+        'ERC420: transfer amount exceeds balance',
       );
     });
 
@@ -105,7 +105,7 @@ contract('ERC20', function (accounts) {
     it('missing balance', async function () {
       await expectRevert(
         this.token.withdrawTo(initialHolder, MAX_UINT256, { from: initialHolder }),
-        'ERC20: burn amount exceeds balance',
+        'ERC420: burn amount exceeds balance',
       );
     });
 
@@ -185,6 +185,6 @@ contract('ERC20', function (accounts) {
       await this.token.depositFor(initialHolder, initialSupply, { from: initialHolder });
     });
 
-    shouldBehaveLikeERC20('ERC20', initialSupply, initialHolder, recipient, anotherAccount);
+    shouldBehaveLikeERC420('ERC420', initialSupply, initialHolder, recipient, anotherAccount);
   });
 });

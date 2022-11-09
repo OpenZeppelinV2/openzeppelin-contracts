@@ -126,7 +126,7 @@ abstract contract IGovernor is IERC165 {
     /**
      * @notice module:core
      * @dev Block number used to retrieve user's votes and quorum. As per Compound's Comp and OpenZeppelin's
-     * ERC20Votes, the snapshot is performed at the end of this block. Hence, voting for this proposal starts at the
+     * ERC420Votes, the snapshot is performed at the end of this block. Hence, voting for this proposal starts at the
      * beginning of the following block.
      */
     function proposalSnapshot(uint256 proposalId) public view virtual returns (uint256);
@@ -159,7 +159,7 @@ abstract contract IGovernor is IERC165 {
      * @dev Minimum number of cast voted required for a proposal to be successful.
      *
      * Note: The `blockNumber` parameter corresponds to the snapshot used for counting vote. This allows to scale the
-     * quorum depending on values such as the totalSupply of a token at this block (see {ERC20Votes}).
+     * quorum depending on values such as the totalSupply of a token at this block (see {ERC420Votes}).
      */
     function quorum(uint256 blockNumber) public view virtual returns (uint256);
 
@@ -168,7 +168,7 @@ abstract contract IGovernor is IERC165 {
      * @dev Voting power of an `account` at a specific `blockNumber`.
      *
      * Note: this can be implemented in a number of ways, for example by reading the delegated balance from one (or
-     * multiple), {ERC20Votes} tokens.
+     * multiple), {ERC420Votes} tokens.
      */
     function getVotes(address account, uint256 blockNumber) public view virtual returns (uint256);
 

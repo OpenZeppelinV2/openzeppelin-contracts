@@ -1,9 +1,9 @@
 const { BN, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
-const ERC20SnapshotMock = artifacts.require('ERC20SnapshotMock');
+const ERC420SnapshotMock = artifacts.require('ERC420SnapshotMock');
 
 const { expect } = require('chai');
 
-contract('ERC20Snapshot', function (accounts) {
+contract('ERC420Snapshot', function (accounts) {
   const [ initialHolder, recipient, other ] = accounts;
 
   const initialSupply = new BN(100);
@@ -12,7 +12,7 @@ contract('ERC20Snapshot', function (accounts) {
   const symbol = 'MTKN';
 
   beforeEach(async function () {
-    this.token = await ERC20SnapshotMock.new(name, symbol, initialHolder, initialSupply);
+    this.token = await ERC420SnapshotMock.new(name, symbol, initialHolder, initialSupply);
   });
 
   describe('snapshot', function () {
@@ -31,11 +31,11 @@ contract('ERC20Snapshot', function (accounts) {
 
   describe('totalSupplyAt', function () {
     it('reverts with a snapshot id of 0', async function () {
-      await expectRevert(this.token.totalSupplyAt(0), 'ERC20Snapshot: id is 0');
+      await expectRevert(this.token.totalSupplyAt(0), 'ERC420Snapshot: id is 0');
     });
 
     it('reverts with a not-yet-created snapshot id', async function () {
-      await expectRevert(this.token.totalSupplyAt(1), 'ERC20Snapshot: nonexistent id');
+      await expectRevert(this.token.totalSupplyAt(1), 'ERC420Snapshot: nonexistent id');
     });
 
     context('with initial snapshot', function () {
@@ -105,11 +105,11 @@ contract('ERC20Snapshot', function (accounts) {
 
   describe('balanceOfAt', function () {
     it('reverts with a snapshot id of 0', async function () {
-      await expectRevert(this.token.balanceOfAt(other, 0), 'ERC20Snapshot: id is 0');
+      await expectRevert(this.token.balanceOfAt(other, 0), 'ERC420Snapshot: id is 0');
     });
 
     it('reverts with a not-yet-created snapshot id', async function () {
-      await expectRevert(this.token.balanceOfAt(other, 1), 'ERC20Snapshot: nonexistent id');
+      await expectRevert(this.token.balanceOfAt(other, 1), 'ERC420Snapshot: nonexistent id');
     });
 
     context('with initial snapshot', function () {

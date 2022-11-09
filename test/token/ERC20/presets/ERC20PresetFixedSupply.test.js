@@ -3,9 +3,9 @@ const { ZERO_ADDRESS } = constants;
 
 const { expect } = require('chai');
 
-const ERC20PresetFixedSupply = artifacts.require('ERC20PresetFixedSupply');
+const ERC420PresetFixedSupply = artifacts.require('ERC420PresetFixedSupply');
 
-contract('ERC20PresetFixedSupply', function (accounts) {
+contract('ERC420PresetFixedSupply', function (accounts) {
   const [deployer, owner] = accounts;
 
   const name = 'PresetFixedSupply';
@@ -15,7 +15,7 @@ contract('ERC20PresetFixedSupply', function (accounts) {
   const amount = new BN('10000');
 
   before(async function () {
-    this.token = await ERC20PresetFixedSupply.new(name, symbol, initialSupply, owner, { from: deployer });
+    this.token = await ERC420PresetFixedSupply.new(name, symbol, initialSupply, owner, { from: deployer });
   });
 
   it('deployer has the balance equal to initial supply', async function () {

@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const Enums = require('../../helpers/enums');
 const { GovernorHelper } = require('../../helpers/governance');
 
-const Token = artifacts.require('ERC20VotesCompMock');
+const Token = artifacts.require('ERC420VotesCompMock');
 const Governor = artifacts.require('GovernorPreventLateQuorumMock');
 const CallReceiver = artifacts.require('CallReceiverMock');
 

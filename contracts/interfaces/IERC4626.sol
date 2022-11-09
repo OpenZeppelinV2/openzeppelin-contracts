@@ -3,8 +3,8 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/IERC20.sol";
-import "../token/ERC20/extensions/IERC20Metadata.sol";
+import "../token/ERC420/IERC420.sol";
+import "../token/ERC420/extensions/IERC420Metadata.sol";
 
 /**
  * @dev Interface of the ERC4626 "Tokenized Vault Standard", as defined in
@@ -12,7 +12,7 @@ import "../token/ERC20/extensions/IERC20Metadata.sol";
  *
  * _Available since v4.7._
  */
-interface IERC4626 is IERC20, IERC20Metadata {
+interface IERC4626 is IERC420, IERC420Metadata {
     event Deposit(address indexed sender, address indexed owner, uint256 assets, uint256 shares);
 
     event Withdraw(

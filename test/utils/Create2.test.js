@@ -3,7 +3,7 @@ const { computeCreate2Address } = require('../helpers/create2');
 const { expect } = require('chai');
 
 const Create2Impl = artifacts.require('Create2Impl');
-const ERC20Mock = artifacts.require('ERC20Mock');
+const ERC420Mock = artifacts.require('ERC420Mock');
 const ERC1820Implementer = artifacts.require('ERC1820Implementer');
 
 contract('Create2', function (accounts) {
@@ -17,7 +17,7 @@ contract('Create2', function (accounts) {
     ['MyToken', 'MTKN', deployerAccount, 100],
   ).slice(2);
 
-  const constructorByteCode = `${ERC20Mock.bytecode}${encodedParams}`;
+  const constructorByteCode = `${ERC420Mock.bytecode}${encodedParams}`;
 
   beforeEach(async function () {
     this.factory = await Create2Impl.new();
@@ -48,12 +48,12 @@ contract('Create2', function (accounts) {
       expect(ERC1820Implementer.bytecode).to.include((await web3.eth.getCode(offChainComputed)).slice(2));
     });
 
-    it('deploys a ERC20Mock with correct balances', async function () {
+    it('deploys a ERC420Mock with correct balances', async function () {
       const offChainComputed = computeCreate2Address(saltHex, constructorByteCode, this.factory.address);
 
       await this.factory.deploy(0, saltHex, constructorByteCode);
 
-      const erc20 = await ERC20Mock.at(offChainComputed);
+      const erc20 = await ERC420Mock.at(offChainComputed);
       expect(await erc20.balanceOf(deployerAccount)).to.be.bignumber.equal(new BN(100));
     });
 

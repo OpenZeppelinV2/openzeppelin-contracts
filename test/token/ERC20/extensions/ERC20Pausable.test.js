@@ -2,9 +2,9 @@ const { BN, expectRevert } = require('@openzeppelin/test-helpers');
 
 const { expect } = require('chai');
 
-const ERC20PausableMock = artifacts.require('ERC20PausableMock');
+const ERC420PausableMock = artifacts.require('ERC420PausableMock');
 
-contract('ERC20Pausable', function (accounts) {
+contract('ERC420Pausable', function (accounts) {
   const [ holder, recipient, anotherAccount ] = accounts;
 
   const initialSupply = new BN(100);
@@ -13,7 +13,7 @@ contract('ERC20Pausable', function (accounts) {
   const symbol = 'MTKN';
 
   beforeEach(async function () {
-    this.token = await ERC20PausableMock.new(name, symbol, holder, initialSupply);
+    this.token = await ERC420PausableMock.new(name, symbol, holder, initialSupply);
   });
 
   describe('pausable token', function () {
@@ -39,7 +39,7 @@ contract('ERC20Pausable', function (accounts) {
         await this.token.pause();
 
         await expectRevert(this.token.transfer(recipient, initialSupply, { from: holder }),
-          'ERC20Pausable: token transfer while paused',
+          'ERC420Pausable: token transfer while paused',
         );
       });
     });
@@ -72,7 +72,7 @@ contract('ERC20Pausable', function (accounts) {
         await this.token.pause();
 
         await expectRevert(this.token.transferFrom(
-          holder, recipient, allowance, { from: anotherAccount }), 'ERC20Pausable: token transfer while paused',
+          holder, recipient, allowance, { from: anotherAccount }), 'ERC420Pausable: token transfer while paused',
         );
       });
     });
@@ -99,7 +99,7 @@ contract('ERC20Pausable', function (accounts) {
         await this.token.pause();
 
         await expectRevert(this.token.mint(recipient, amount),
-          'ERC20Pausable: token transfer while paused',
+          'ERC420Pausable: token transfer while paused',
         );
       });
     });
@@ -126,7 +126,7 @@ contract('ERC20Pausable', function (accounts) {
         await this.token.pause();
 
         await expectRevert(this.token.burn(holder, amount),
-          'ERC20Pausable: token transfer while paused',
+          'ERC420Pausable: token transfer while paused',
         );
       });
     });

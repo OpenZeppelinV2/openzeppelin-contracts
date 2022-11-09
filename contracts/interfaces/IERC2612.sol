@@ -3,6 +3,6 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/extensions/IERC20Permit.sol";
+import "../token/ERC420/extensions/IERC420Permit.sol";
 
-interface IERC2612 is IERC20Permit {}
+interface IERC2612 is IERC420Permit {}

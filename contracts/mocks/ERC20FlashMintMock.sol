@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/extensions/ERC20FlashMint.sol";
+import "../token/ERC420/extensions/ERC420FlashMint.sol";
 
-contract ERC20FlashMintMock is ERC20FlashMint {
+contract ERC420FlashMintMock is ERC420FlashMint {
     uint256 _flashFeeAmount;
     address _flashFeeReceiverAddress;
 
@@ -13,7 +13,7 @@ contract ERC20FlashMintMock is ERC20FlashMint {
         string memory symbol,
         address initialAccount,
         uint256 initialBalance
-    ) ERC20(name, symbol) {
+    ) ERC420(name, symbol) {
         _mint(initialAccount, initialBalance);
     }
 

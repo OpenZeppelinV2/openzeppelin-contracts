@@ -31,7 +31,7 @@ const links = files.map((file) => {
   };
 });
 
-// Case-insensitive sort based on titles (so 'token/ERC20' gets sorted as 'erc20')
+// Case-insensitive sort based on titles (so 'token/ERC420' gets sorted as 'erc20')
 const sortedLinks = links.sort(function (a, b) {
   return a.title.toLowerCase().localeCompare(b.title.toLowerCase(), undefined, { numeric: true });
 });

@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/extensions/ERC20Permit.sol)
+// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC420/extensions/ERC420Permit.sol)
 
 pragma solidity ^0.8.0;
 
-import "./IERC20Permit.sol";
-import "../ERC20.sol";
+import "./IERC420Permit.sol";
+import "../ERC420.sol";
 import "../../../utils/cryptography/ECDSA.sol";
 import "../../../utils/cryptography/EIP712.sol";
 import "../../../utils/Counters.sol";
 
 /**
- * @dev Implementation of the ERC20 Permit extension allowing approvals to be made via signatures, as defined in
+ * @dev Implementation of the ERC420 Permit extension allowing approvals to be made via signatures, as defined in
  * https://eips.ethereum.org/EIPS/eip-2612[EIP-2612].
  *
- * Adds the {permit} method, which can be used to change an account's ERC20 allowance (see {IERC20-allowance}) by
- * presenting a message signed by the account. By not relying on `{IERC20-approve}`, the token holder account doesn't
+ * Adds the {permit} method, which can be used to change an account's ERC420 allowance (see {IERC420-allowance}) by
+ * presenting a message signed by the account. By not relying on `{IERC420-approve}`, the token holder account doesn't
  * need to send a transaction, and thus is not required to hold Ether at all.
  *
  * _Available since v3.4._
  */
-abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
+abstract contract ERC420Permit is ERC420, IERC420Permit, EIP712 {
     using Counters for Counters.Counter;
 
     mapping(address => Counters.Counter) private _nonces;
@@ -39,12 +39,12 @@ abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
     /**
      * @dev Initializes the {EIP712} domain separator using the `name` parameter, and setting `version` to `"1"`.
      *
-     * It's a good idea to use the same `name` that is defined as the ERC20 token name.
+     * It's a good idea to use the same `name` that is defined as the ERC420 token name.
      */
     constructor(string memory name) EIP712(name, "1") {}
 
     /**
-     * @dev See {IERC20Permit-permit}.
+     * @dev See {IERC420Permit-permit}.
      */
     function permit(
         address owner,
@@ -55,27 +55,27 @@ abstract contract ERC20Permit is ERC20, IERC20Permit, EIP712 {
         bytes32 r,
         bytes32 s
     ) public virtual override {
-        require(block.timestamp <= deadline, "ERC20Permit: expired deadline");
+        require(block.timestamp <= deadline, "ERC420Permit: expired deadline");
 
         bytes32 structHash = keccak256(abi.encode(_PERMIT_TYPEHASH, owner, spender, value, _useNonce(owner), deadline));
 
         bytes32 hash = _hashTypedDataV4(structHash);
 
         address signer = ECDSA.recover(hash, v, r, s);
-        require(signer == owner, "ERC20Permit: invalid signature");
+        require(signer == owner, "ERC420Permit: invalid signature");
 
         _approve(owner, spender, value);
     }
 
     /**
-     * @dev See {IERC20Permit-nonces}.
+     * @dev See {IERC420Permit-nonces}.
      */
     function nonces(address owner) public view virtual override returns (uint256) {
         return _nonces[owner].current();
     }
 
     /**
-     * @dev See {IERC20Permit-DOMAIN_SEPARATOR}.
+     * @dev See {IERC420Permit-DOMAIN_SEPARATOR}.
      */
     // solhint-disable-next-line func-name-mixedcase
     function DOMAIN_SEPARATOR() external view override returns (bytes32) {

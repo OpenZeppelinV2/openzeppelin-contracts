@@ -8,7 +8,7 @@ const { fromRpcSig } = require('ethereumjs-util');
 const ethSigUtil = require('eth-sig-util');
 const Wallet = require('ethereumjs-wallet').default;
 
-const ERC20VotesCompMock = artifacts.require('ERC20VotesCompMock');
+const ERC420VotesCompMock = artifacts.require('ERC420VotesCompMock');
 
 const { batchInBlock } = require('../../../helpers/txpool');
 const { EIP712Domain, domainSeparator } = require('../../../helpers/eip712');
@@ -19,7 +19,7 @@ const Delegation = [
   { name: 'expiry', type: 'uint256' },
 ];
 
-contract('ERC20VotesComp', function (accounts) {
+contract('ERC420VotesComp', function (accounts) {
   const [ holder, recipient, holderDelegatee, recipientDelegatee, other1, other2 ] = accounts;
 
   const name = 'My Token';
@@ -28,7 +28,7 @@ contract('ERC20VotesComp', function (accounts) {
   const supply = new BN('10000000000000000000000000');
 
   beforeEach(async function () {
-    this.token = await ERC20VotesCompMock.new(name, symbol);
+    this.token = await ERC420VotesCompMock.new(name, symbol);
 
     // We get the chain id from the contract because Ganache (used for coverage) does not return the same chain id
     // from within the EVM as from the JSON RPC interface.
@@ -52,7 +52,7 @@ contract('ERC20VotesComp', function (accounts) {
     const amount = new BN('2').pow(new BN('96'));
     await expectRevert(
       this.token.mint(holder, amount),
-      'ERC20Votes: total supply risks overflowing votes',
+      'ERC420Votes: total supply risks overflowing votes',
     );
   });
 
@@ -159,7 +159,7 @@ contract('ERC20VotesComp', function (accounts) {
 
         await expectRevert(
           this.token.delegateBySig(delegatorAddress, nonce, MAX_UINT256, v, r, s),
-          'ERC20Votes: invalid nonce',
+          'ERC420Votes: invalid nonce',
         );
       });
 
@@ -191,7 +191,7 @@ contract('ERC20VotesComp', function (accounts) {
         ));
         await expectRevert(
           this.token.delegateBySig(delegatorAddress, nonce + 1, MAX_UINT256, v, r, s),
-          'ERC20Votes: invalid nonce',
+          'ERC420Votes: invalid nonce',
         );
       });
 
@@ -208,7 +208,7 @@ contract('ERC20VotesComp', function (accounts) {
 
         await expectRevert(
           this.token.delegateBySig(delegatorAddress, nonce, expiry, v, r, s),
-          'ERC20Votes: signature expired',
+          'ERC420Votes: signature expired',
         );
       });
     });
@@ -378,7 +378,7 @@ contract('ERC20VotesComp', function (accounts) {
       it('reverts if block number >= current block', async function () {
         await expectRevert(
           this.token.getPriorVotes(other1, 5e10),
-          'ERC20Votes: block not yet mined',
+          'ERC420Votes: block not yet mined',
         );
       });
 
@@ -440,7 +440,7 @@ contract('ERC20VotesComp', function (accounts) {
     it('reverts if block number >= current block', async function () {
       await expectRevert(
         this.token.getPastTotalSupply(5e10),
-        'ERC20Votes: block not yet mined',
+        'ERC420Votes: block not yet mined',
       );
     });
 

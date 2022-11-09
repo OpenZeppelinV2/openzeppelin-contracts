@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/extensions/ERC20Snapshot.sol";
+import "../token/ERC420/extensions/ERC420Snapshot.sol";
 
-contract ERC20SnapshotMock is ERC20Snapshot {
+contract ERC420SnapshotMock is ERC420Snapshot {
     constructor(
         string memory name,
         string memory symbol,
         address initialAccount,
         uint256 initialBalance
-    ) ERC20(name, symbol) {
+    ) ERC420(name, symbol) {
         _mint(initialAccount, initialBalance);
     }
 

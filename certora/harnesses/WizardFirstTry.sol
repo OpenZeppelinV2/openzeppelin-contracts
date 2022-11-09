@@ -9,12 +9,12 @@ import "../munged/governance/extensions/GovernorTimelockCompound.sol";
 
 /* 
 Wizard options:
-ERC20Votes
+ERC420Votes
 TimelockCompound
 */
 
 contract WizardFirstTry is Governor, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockCompound {
-    constructor(ERC20Votes _token, ICompoundTimelock _timelock, string memory name, uint256 quorumFraction)
+    constructor(ERC420Votes _token, ICompoundTimelock _timelock, string memory name, uint256 quorumFraction)
         Governor(name)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(quorumFraction)

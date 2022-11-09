@@ -2,13 +2,13 @@
 // OpenZeppelin Contracts (last updated v4.7.0) (finance/VestingWallet.sol)
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/utils/SafeERC20.sol";
+import "../token/ERC420/utils/SafeERC420.sol";
 import "../utils/Address.sol";
 import "../utils/Context.sol";
 
 /**
  * @title VestingWallet
- * @dev This contract handles the vesting of Eth and ERC20 tokens for a given beneficiary. Custody of multiple tokens
+ * @dev This contract handles the vesting of Eth and ERC420 tokens for a given beneficiary. Custody of multiple tokens
  * can be given to this contract, which will release the token to the beneficiary following a given vesting schedule.
  * The vesting schedule is customizable through the {vestedAmount} function.
  *
@@ -18,7 +18,7 @@ import "../utils/Context.sol";
  */
 contract VestingWallet is Context {
     event EtherReleased(uint256 amount);
-    event ERC20Released(address indexed token, uint256 amount);
+    event ERC420Released(address indexed token, uint256 amount);
 
     uint256 private _released;
     mapping(address => uint256) private _erc20Released;
@@ -89,7 +89,7 @@ contract VestingWallet is Context {
 
     /**
      * @dev Getter for the amount of releasable `token` tokens. `token` should be the address of an
-     * IERC20 contract.
+     * IERC420 contract.
      */
     function releasable(address token) public view virtual returns (uint256) {
         return vestedAmount(token, uint64(block.timestamp)) - released(token);
@@ -110,13 +110,13 @@ contract VestingWallet is Context {
     /**
      * @dev Release the tokens that have already vested.
      *
-     * Emits a {ERC20Released} event.
+     * Emits a {ERC420Released} event.
      */
     function release(address token) public virtual {
         uint256 amount = releasable(token);
         _erc20Released[token] += amount;
-        emit ERC20Released(token, amount);
-        SafeERC20.safeTransfer(IERC20(token), beneficiary(), amount);
+        emit ERC420Released(token, amount);
+        SafeERC420.safeTransfer(IERC420(token), beneficiary(), amount);
     }
 
     /**
@@ -130,7 +130,7 @@ contract VestingWallet is Context {
      * @dev Calculates the amount of tokens that has already vested. Default implementation is a linear vesting curve.
      */
     function vestedAmount(address token, uint64 timestamp) public view virtual returns (uint256) {
-        return _vestingSchedule(IERC20(token).balanceOf(address(this)) + released(token), timestamp);
+        return _vestingSchedule(IERC420(token).balanceOf(address(this)) + released(token), timestamp);
     }
 
     /**

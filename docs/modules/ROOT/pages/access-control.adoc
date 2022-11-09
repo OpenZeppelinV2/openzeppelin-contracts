@@ -56,7 +56,7 @@ Most software uses access control systems that are role-based: some users are re
 OpenZeppelin Contracts provides xref:api:access.adoc#AccessControl[`AccessControl`] for implementing role-based access control. Its usage is straightforward: for each role that you want to define,
 you will create a new _role identifier_ that is used to grant, revoke, and check if an account has that role.
 
-Here's a simple example of using `AccessControl` in an xref:tokens.adoc#ERC20[`ERC20` token] to define a 'minter' role, which allows accounts that have it create new tokens:
+Here's a simple example of using `AccessControl` in an xref:tokens.adoc#ERC420[`ERC420` token] to define a 'minter' role, which allows accounts that have it create new tokens:
 
 [source,solidity]
 ----
@@ -65,13 +65,13 @@ Here's a simple example of using `AccessControl` in an xref:tokens.adoc#ERC20[`E
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC420/ERC420.sol";
 
-contract MyToken is ERC20, AccessControl {
+contract MyToken is ERC420, AccessControl {
     // Create a new role identifier for the minter role
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    constructor(address minter) ERC20("MyToken", "TKN") {
+    constructor(address minter) ERC420("MyToken", "TKN") {
         // Grant the minter role to a specified account
         _grantRole(MINTER_ROLE, minter);
     }
@@ -88,7 +88,7 @@ NOTE: Make sure you fully understand how xref:api:access.adoc#AccessControl[`Acc
 
 While clear and explicit, this isn't anything we wouldn't have been able to achieve with `Ownable`. Indeed, where `AccessControl` shines is in scenarios where granular permissions are required, which can be implemented by defining _multiple_ roles.
 
-Let's augment our ERC20 token example by also defining a 'burner' role, which lets accounts destroy tokens, and by using the `onlyRole` modifier:
+Let's augment our ERC420 token example by also defining a 'burner' role, which lets accounts destroy tokens, and by using the `onlyRole` modifier:
 
 [source,solidity]
 ----
@@ -97,13 +97,13 @@ Let's augment our ERC20 token example by also defining a 'burner' role, which le
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC420/ERC420.sol";
 
-contract MyToken is ERC20, AccessControl {
+contract MyToken is ERC420, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    constructor(address minter, address burner) ERC20("MyToken", "TKN") {
+    constructor(address minter, address burner) ERC420("MyToken", "TKN") {
         _grantRole(MINTER_ROLE, minter);
         _grantRole(BURNER_ROLE, burner);
     }
@@ -123,7 +123,7 @@ So clean! By splitting concerns this way, more granular levels of permission may
 [[granting-and-revoking]]
 === Granting and Revoking Roles
 
-The ERC20 token example above uses `_grantRole`, an `internal` function that is useful when programmatically assigning roles (such as during construction). But what if we later want to grant the 'minter' role to additional accounts?
+The ERC420 token example above uses `_grantRole`, an `internal` function that is useful when programmatically assigning roles (such as during construction). But what if we later want to grant the 'minter' role to additional accounts?
 
 By default, **accounts with a role cannot grant it or revoke it from other accounts**: all having a role does is making the `hasRole` check pass. To grant and revoke roles dynamically, you will need help from the _role's admin_.
 
@@ -131,7 +131,7 @@ Every role has an associated admin role, which grants permission to call the `gr
 
 This mechanism can be used to create complex permissioning structures resembling organizational charts, but it also provides an easy way to manage simpler applications. `AccessControl` includes a special role, called `DEFAULT_ADMIN_ROLE`, which acts as the **default admin role for all roles**. An account with this role will be able to manage any other role, unless `_setRoleAdmin` is used to select a new admin role.
 
-Let's take a look at the ERC20 token example, this time taking advantage of the default admin role:
+Let's take a look at the ERC420 token example, this time taking advantage of the default admin role:
 
 [source,solidity]
 ----
@@ -140,13 +140,13 @@ Let's take a look at the ERC20 token example, this time taking advantage of the 
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC420/ERC420.sol";
 
-contract MyToken is ERC20, AccessControl {
+contract MyToken is ERC420, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    constructor() ERC20("MyToken", "TKN") {
+    constructor() ERC420("MyToken", "TKN") {
         // Grant the contract deployer the default admin role: it will be able
         // to grant and revoke any roles
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);

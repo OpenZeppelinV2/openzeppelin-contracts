@@ -4,7 +4,7 @@ const RLP = require('rlp');
 const Enums = require('../../helpers/enums');
 const { GovernorHelper } = require('../../helpers/governance');
 
-const Token = artifacts.require('ERC20VotesCompMock');
+const Token = artifacts.require('ERC420VotesCompMock');
 const Timelock = artifacts.require('CompTimelock');
 const Governor = artifacts.require('GovernorCompatibilityBravoMock');
 const CallReceiver = artifacts.require('CallReceiverMock');

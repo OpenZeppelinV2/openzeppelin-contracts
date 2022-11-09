@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC20/extensions/ERC20Votes.sol)
+// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC420/extensions/ERC420Votes.sol)
 
 pragma solidity ^0.8.0;
 
-import "./ERC20Permit.sol";
+import "./ERC420Permit.sol";
 import "../../../utils/math/Math.sol";
 import "../../../governance/utils/IVotes.sol";
 import "../../../utils/math/SafeCast.sol";
 import "../../../utils/cryptography/ECDSA.sol";
 
 /**
- * @dev Extension of ERC20 to support Compound-like voting and delegation. This version is more generic than Compound's,
+ * @dev Extension of ERC420 to support Compound-like voting and delegation. This version is more generic than Compound's,
  * and supports token supply up to 2^224^ - 1, while COMP is limited to 2^96^ - 1.
  *
- * NOTE: If exact COMP compatibility is required, use the {ERC20VotesComp} variant of this module.
+ * NOTE: If exact COMP compatibility is required, use the {ERC420VotesComp} variant of this module.
  *
  * This extension keeps a history (checkpoints) of each account's vote power. Vote power can be delegated either
  * by calling the {delegate} function directly, or by providing a signature to be used with {delegateBySig}. Voting
@@ -24,7 +24,7 @@ import "../../../utils/cryptography/ECDSA.sol";
  *
  * _Available since v4.2._
  */
-abstract contract ERC20Votes is IVotes, ERC20Permit {
+abstract contract ERC420Votes is IVotes, ERC420Permit {
     struct Checkpoint {
         uint32 fromBlock;
         uint224 votes;
@@ -76,7 +76,7 @@ abstract contract ERC20Votes is IVotes, ERC20Permit {
      * - `blockNumber` must have been already mined
      */
     function getPastVotes(address account, uint256 blockNumber) public view virtual override returns (uint256) {
-        require(blockNumber < block.number, "ERC20Votes: block not yet mined");
+        require(blockNumber < block.number, "ERC420Votes: block not yet mined");
         return _checkpointsLookup(_checkpoints[account], blockNumber);
     }
 
@@ -89,7 +89,7 @@ abstract contract ERC20Votes is IVotes, ERC20Permit {
      * - `blockNumber` must have been already mined
      */
     function getPastTotalSupply(uint256 blockNumber) public view virtual override returns (uint256) {
-        require(blockNumber < block.number, "ERC20Votes: block not yet mined");
+        require(blockNumber < block.number, "ERC420Votes: block not yet mined");
         return _checkpointsLookup(_totalSupplyCheckpoints, blockNumber);
     }
 
@@ -155,14 +155,14 @@ abstract contract ERC20Votes is IVotes, ERC20Permit {
         bytes32 r,
         bytes32 s
     ) public virtual override {
-        require(block.timestamp <= expiry, "ERC20Votes: signature expired");
+        require(block.timestamp <= expiry, "ERC420Votes: signature expired");
         address signer = ECDSA.recover(
             _hashTypedDataV4(keccak256(abi.encode(_DELEGATION_TYPEHASH, delegatee, nonce, expiry))),
             v,
             r,
             s
         );
-        require(nonce == _useNonce(signer), "ERC20Votes: invalid nonce");
+        require(nonce == _useNonce(signer), "ERC420Votes: invalid nonce");
         _delegate(signer, delegatee);
     }
 
@@ -178,7 +178,7 @@ abstract contract ERC20Votes is IVotes, ERC20Permit {
      */
     function _mint(address account, uint256 amount) internal virtual override {
         super._mint(account, amount);
-        require(totalSupply() <= _maxSupply(), "ERC20Votes: total supply risks overflowing votes");
+        require(totalSupply() <= _maxSupply(), "ERC420Votes: total supply risks overflowing votes");
 
         _writeCheckpoint(_totalSupplyCheckpoints, _add, amount);
     }

@@ -2,7 +2,7 @@ const { expectRevert } = require('@openzeppelin/test-helpers');
 
 const { expect } = require('chai');
 
-function shouldBehaveLikeERC20Capped (minter, [other], cap) {
+function shouldBehaveLikeERC420Capped (minter, [other], cap) {
   describe('capped token', function () {
     const from = minter;
 
@@ -17,16 +17,16 @@ function shouldBehaveLikeERC20Capped (minter, [other], cap) {
 
     it('fails to mint if the amount exceeds the cap', async function () {
       await this.token.mint(other, cap.subn(1), { from });
-      await expectRevert(this.token.mint(other, 2, { from }), 'ERC20Capped: cap exceeded');
+      await expectRevert(this.token.mint(other, 2, { from }), 'ERC420Capped: cap exceeded');
     });
 
     it('fails to mint after cap is reached', async function () {
       await this.token.mint(other, cap, { from });
-      await expectRevert(this.token.mint(other, 1, { from }), 'ERC20Capped: cap exceeded');
+      await expectRevert(this.token.mint(other, 1, { from }), 'ERC420Capped: cap exceeded');
     });
   });
 }
 
 module.exports = {
-  shouldBehaveLikeERC20Capped,
+  shouldBehaveLikeERC420Capped,
 };

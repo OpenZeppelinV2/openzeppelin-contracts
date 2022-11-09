@@ -13,9 +13,9 @@ const {
 } = require('./ERC777.behavior');
 
 const {
-  shouldBehaveLikeERC20,
-  shouldBehaveLikeERC20Approve,
-} = require('../ERC20/ERC20.behavior');
+  shouldBehaveLikeERC420,
+  shouldBehaveLikeERC420Approve,
+} = require('../ERC420/ERC420.behavior');
 
 const ERC777 = artifacts.require('ERC777Mock');
 const ERC777SenderRecipientMock = artifacts.require('ERC777SenderRecipientMock');
@@ -40,11 +40,11 @@ contract('ERC777', function (accounts) {
       this.token = await ERC777.new(holder, initialSupply, name, symbol, defaultOperators);
     });
 
-    describe('as an ERC20 token', function () {
-      shouldBehaveLikeERC20('ERC777', initialSupply, holder, anyone, defaultOperatorA);
+    describe('as an ERC420 token', function () {
+      shouldBehaveLikeERC420('ERC777', initialSupply, holder, anyone, defaultOperatorA);
 
       describe('_approve', function () {
-        shouldBehaveLikeERC20Approve('ERC777', holder, anyone, initialSupply, function (owner, spender, amount) {
+        shouldBehaveLikeERC420Approve('ERC777', holder, anyone, initialSupply, function (owner, spender, amount) {
           return this.token.approveInternal(owner, spender, amount);
         });
 
@@ -98,8 +98,8 @@ contract('ERC777', function (accounts) {
           .to.equal(this.token.address);
       });
 
-      it('the ERC20Token interface is registered in the registry', async function () {
-        expect(await this.erc1820.getInterfaceImplementer(this.token.address, web3.utils.soliditySha3('ERC20Token')))
+      it('the ERC420Token interface is registered in the registry', async function () {
+        expect(await this.erc1820.getInterfaceImplementer(this.token.address, web3.utils.soliditySha3('ERC420Token')))
           .to.equal(this.token.address);
       });
     });
@@ -448,11 +448,11 @@ contract('ERC777', function (accounts) {
               );
             });
 
-            it('(ERC20) transfer succeeds', async function () {
+            it('(ERC420) transfer succeeds', async function () {
               await this.token.transfer(this.recipient, amount, { from: holder });
             });
 
-            it('(ERC20) transferFrom succeeds', async function () {
+            it('(ERC420) transferFrom succeeds', async function () {
               const approved = anyone;
               await this.token.approve(approved, amount, { from: this.sender });
               await this.token.transferFrom(this.sender, this.recipient, amount, { from: approved });

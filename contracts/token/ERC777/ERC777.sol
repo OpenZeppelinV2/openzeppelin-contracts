@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
 import "./IERC777.sol";
 import "./IERC777Recipient.sol";
 import "./IERC777Sender.sol";
-import "../ERC20/IERC20.sol";
+import "../ERC420/IERC420.sol";
 import "../../utils/Address.sol";
 import "../../utils/Context.sol";
 import "../../utils/introspection/IERC1820Registry.sol";
@@ -17,16 +17,16 @@ import "../../utils/introspection/IERC1820Registry.sol";
  * This implementation is agnostic to the way tokens are created. This means
  * that a supply mechanism has to be added in a derived contract using {_mint}.
  *
- * Support for ERC20 is included in this contract, as specified by the EIP: both
- * the ERC777 and ERC20 interfaces can be safely used when interacting with it.
- * Both {IERC777-Sent} and {IERC20-Transfer} events are emitted on token
+ * Support for ERC420 is included in this contract, as specified by the EIP: both
+ * the ERC777 and ERC420 interfaces can be safely used when interacting with it.
+ * Both {IERC777-Sent} and {IERC420-Transfer} events are emitted on token
  * movements.
  *
  * Additionally, the {IERC777-granularity} value is hard-coded to `1`, meaning that there
  * are no special restrictions in the amount of tokens that created, moved, or
- * destroyed. This makes integration with ERC20 applications seamless.
+ * destroyed. This makes integration with ERC420 applications seamless.
  */
-contract ERC777 is Context, IERC777, IERC20 {
+contract ERC777 is Context, IERC777, IERC420 {
     using Address for address;
 
     IERC1820Registry internal constant _ERC1820_REGISTRY = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
@@ -51,7 +51,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     mapping(address => mapping(address => bool)) private _operators;
     mapping(address => mapping(address => bool)) private _revokedDefaultOperators;
 
-    // ERC20-allowances
+    // ERC420-allowances
     mapping(address => mapping(address => uint256)) private _allowances;
 
     /**
@@ -72,7 +72,7 @@ contract ERC777 is Context, IERC777, IERC20 {
 
         // register interfaces
         _ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC777Token"), address(this));
-        _ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC20Token"), address(this));
+        _ERC1820_REGISTRY.setInterfaceImplementer(address(this), keccak256("ERC420Token"), address(this));
     }
 
     /**
@@ -90,7 +90,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {ERC20-decimals}.
+     * @dev See {ERC420-decimals}.
      *
      * Always returns 18, as per the
      * [ERC777 EIP](https://eips.ethereum.org/EIPS/eip-777#backward-compatibility).
@@ -111,21 +111,21 @@ contract ERC777 is Context, IERC777, IERC20 {
     /**
      * @dev See {IERC777-totalSupply}.
      */
-    function totalSupply() public view virtual override(IERC20, IERC777) returns (uint256) {
+    function totalSupply() public view virtual override(IERC420, IERC777) returns (uint256) {
         return _totalSupply;
     }
 
     /**
      * @dev Returns the amount of tokens owned by an account (`tokenHolder`).
      */
-    function balanceOf(address tokenHolder) public view virtual override(IERC20, IERC777) returns (uint256) {
+    function balanceOf(address tokenHolder) public view virtual override(IERC420, IERC777) returns (uint256) {
         return _balances[tokenHolder];
     }
 
     /**
      * @dev See {IERC777-send}.
      *
-     * Also emits a {IERC20-Transfer} event for ERC20 compatibility.
+     * Also emits a {IERC420-Transfer} event for ERC420 compatibility.
      */
     function send(
         address recipient,
@@ -136,7 +136,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {IERC20-transfer}.
+     * @dev See {IERC420-transfer}.
      *
      * Unlike `send`, `recipient` is _not_ required to implement the {IERC777Recipient}
      * interface if it is a contract.
@@ -151,7 +151,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     /**
      * @dev See {IERC777-burn}.
      *
-     * Also emits a {IERC20-Transfer} event for ERC20 compatibility.
+     * Also emits a {IERC420-Transfer} event for ERC420 compatibility.
      */
     function burn(uint256 amount, bytes memory data) public virtual override {
         _burn(_msgSender(), amount, data, "");
@@ -207,7 +207,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     /**
      * @dev See {IERC777-operatorSend}.
      *
-     * Emits {Sent} and {IERC20-Transfer} events.
+     * Emits {Sent} and {IERC420-Transfer} events.
      */
     function operatorSend(
         address sender,
@@ -223,7 +223,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     /**
      * @dev See {IERC777-operatorBurn}.
      *
-     * Emits {Burned} and {IERC20-Transfer} events.
+     * Emits {Burned} and {IERC420-Transfer} events.
      */
     function operatorBurn(
         address account,
@@ -236,7 +236,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {IERC20-allowance}.
+     * @dev See {IERC420-allowance}.
      *
      * Note that operator and allowance concepts are orthogonal: operators may
      * not have allowance, and accounts with allowance may not be operators
@@ -247,7 +247,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {IERC20-approve}.
+     * @dev See {IERC420-approve}.
      *
      * NOTE: If `value` is the maximum `uint256`, the allowance is not updated on
      * `transferFrom`. This is semantically equivalent to an infinite approval.
@@ -261,7 +261,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {IERC20-transferFrom}.
+     * @dev See {IERC420-transferFrom}.
      *
      * NOTE: Does not update the allowance if the current allowance
      * is the maximum `uint256`.
@@ -270,7 +270,7 @@ contract ERC777 is Context, IERC777, IERC20 {
      * call `transferFrom` (unless they have allowance), and accounts with
      * allowance cannot call `operatorSend` (unless they are operators).
      *
-     * Emits {Sent}, {IERC20-Transfer} and {IERC20-Approval} events.
+     * Emits {Sent}, {IERC420-Transfer} and {IERC420-Approval} events.
      */
     function transferFrom(
         address holder,
@@ -293,7 +293,7 @@ contract ERC777 is Context, IERC777, IERC20 {
      *
      * See {IERC777Sender} and {IERC777Recipient}.
      *
-     * Emits {Minted} and {IERC20-Transfer} events.
+     * Emits {Minted} and {IERC420-Transfer} events.
      *
      * Requirements
      *
@@ -320,7 +320,7 @@ contract ERC777 is Context, IERC777, IERC20 {
      *
      * See {IERC777Sender} and {IERC777Recipient}.
      *
-     * Emits {Minted} and {IERC20-Transfer} events.
+     * Emits {Minted} and {IERC420-Transfer} events.
      *
      * Requirements
      *
@@ -435,7 +435,7 @@ contract ERC777 is Context, IERC777, IERC20 {
     }
 
     /**
-     * @dev See {ERC20-_approve}.
+     * @dev See {ERC420-_approve}.
      *
      * Note that accounts cannot have allowance issued by their operators.
      */
@@ -508,7 +508,7 @@ contract ERC777 is Context, IERC777, IERC20 {
      * Does not update the allowance amount in case of infinite allowance.
      * Revert if not enough allowance is available.
      *
-     * Might emit an {IERC20-Approval} event.
+     * Might emit an {IERC420-Approval} event.
      */
     function _spendAllowance(
         address owner,

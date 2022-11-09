@@ -11,12 +11,12 @@ import "../munged/governance/extensions/GovernorProposalThreshold.sol";
 /* 
 Wizard options:
 ProposalThreshhold = 10
-ERC20Votes
+ERC420Votes
 TimelockController
 */
 
 contract WizardControlFirstPriority is Governor, GovernorProposalThreshold, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
-    constructor(ERC20Votes _token, TimelockController _timelock, string memory name, uint256 quorumFraction)
+    constructor(ERC420Votes _token, TimelockController _timelock, string memory name, uint256 quorumFraction)
         Governor(name)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(quorumFraction)

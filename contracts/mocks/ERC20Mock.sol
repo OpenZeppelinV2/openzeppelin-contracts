@@ -2,16 +2,16 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/ERC20.sol";
+import "../token/ERC420/ERC420.sol";
 
-// mock class using ERC20
-contract ERC20Mock is ERC20 {
+// mock class using ERC420
+contract ERC420Mock is ERC420 {
     constructor(
         string memory name,
         string memory symbol,
         address initialAccount,
         uint256 initialBalance
-    ) payable ERC20(name, symbol) {
+    ) payable ERC420(name, symbol) {
         _mint(initialAccount, initialBalance);
     }
 

@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC20/extensions/ERC20Snapshot.sol)
+// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC420/extensions/ERC420Snapshot.sol)
 
 pragma solidity ^0.8.0;
 
-import "../ERC20.sol";
+import "../ERC420.sol";
 import "../../../utils/Arrays.sol";
 import "../../../utils/Counters.sol";
 
 /**
- * @dev This contract extends an ERC20 token with a snapshot mechanism. When a snapshot is created, the balances and
+ * @dev This contract extends an ERC420 token with a snapshot mechanism. When a snapshot is created, the balances and
  * total supply at the time are recorded for later access.
  *
  * This can be used to safely create mechanisms based on token balances such as trustless dividends or weighted voting.
  * In naive implementations it's possible to perform a "double spend" attack by reusing the same balance from different
  * accounts. By using snapshots to calculate dividends or voting power, those attacks no longer apply. It can also be
- * used to create an efficient ERC20 forking mechanism.
+ * used to create an efficient ERC420 forking mechanism.
  *
  * Snapshots are created by the internal {_snapshot} function, which will emit the {Snapshot} event and return a
  * snapshot id. To get the total supply at the time of a snapshot, call the function {totalSupplyAt} with the snapshot
@@ -26,7 +26,7 @@ import "../../../utils/Counters.sol";
  * function, be careful about the monotonicity of its result. Non-monotonic snapshot ids will break the contract.
  *
  * Implementing snapshots for every block using this method will incur significant gas costs. For a gas-efficient
- * alternative consider {ERC20Votes}.
+ * alternative consider {ERC420Votes}.
  *
  * ==== Gas Costs
  *
@@ -34,12 +34,12 @@ import "../../../utils/Counters.sol";
  * n)_ in the number of snapshots that have been created, although _n_ for a specific account will generally be much
  * smaller since identical balances in subsequent snapshots are stored as a single entry.
  *
- * There is a constant overhead for normal ERC20 transfers due to the additional snapshot bookkeeping. This overhead is
+ * There is a constant overhead for normal ERC420 transfers due to the additional snapshot bookkeeping. This overhead is
  * only significant for the first transfer that immediately follows a snapshot for a particular account. Subsequent
  * transfers will have normal cost until the next snapshot, and so on.
  */
 
-abstract contract ERC20Snapshot is ERC20 {
+abstract contract ERC420Snapshot is ERC420 {
     // Inspired by Jordi Baylina's MiniMeToken to record historical balances:
     // https://github.com/Giveth/minime/blob/ea04d950eea153a04c51fa510b068b9dded390cb/contracts/MiniMeToken.sol
 
@@ -79,7 +79,7 @@ abstract contract ERC20Snapshot is ERC20 {
      *
      * First, it can be used to increase the cost of retrieval of values from snapshots, although it will grow
      * logarithmically thus rendering this attack ineffective in the long term. Second, it can be used to target
-     * specific accounts and increase the cost of ERC20 transfers for them, in the ways specified in the Gas Costs
+     * specific accounts and increase the cost of ERC420 transfers for them, in the ways specified in the Gas Costs
      * section above.
      *
      * We haven't measured the actual numbers; if this is something you're interested in please reach out to us.
@@ -143,8 +143,8 @@ abstract contract ERC20Snapshot is ERC20 {
     }
 
     function _valueAt(uint256 snapshotId, Snapshots storage snapshots) private view returns (bool, uint256) {
-        require(snapshotId > 0, "ERC20Snapshot: id is 0");
-        require(snapshotId <= _getCurrentSnapshotId(), "ERC20Snapshot: nonexistent id");
+        require(snapshotId > 0, "ERC420Snapshot: id is 0");
+        require(snapshotId <= _getCurrentSnapshotId(), "ERC420Snapshot: nonexistent id");
 
         // When a valid snapshot is queried, there are three possibilities:
         //  a) The queried value was not modified after the snapshot was taken. Therefore, a snapshot entry was never

@@ -8,11 +8,11 @@ const { fromRpcSig } = require('ethereumjs-util');
 const ethSigUtil = require('eth-sig-util');
 const Wallet = require('ethereumjs-wallet').default;
 
-const ERC20PermitMock = artifacts.require('ERC20PermitMock');
+const ERC420PermitMock = artifacts.require('ERC420PermitMock');
 
 const { EIP712Domain, Permit, domainSeparator } = require('../../../helpers/eip712');
 
-contract('ERC20Permit', function (accounts) {
+contract('ERC420Permit', function (accounts) {
   const [ initialHolder, spender, recipient, other ] = accounts;
 
   const name = 'My Token';
@@ -22,7 +22,7 @@ contract('ERC20Permit', function (accounts) {
   const initialSupply = new BN(100);
 
   beforeEach(async function () {
-    this.token = await ERC20PermitMock.new(name, symbol, initialHolder, initialSupply);
+    this.token = await ERC420PermitMock.new(name, symbol, initialHolder, initialSupply);
 
     // We get the chain id from the contract because Ganache (used for coverage) does not return the same chain id
     // from within the EVM as from the JSON RPC interface.
@@ -77,7 +77,7 @@ contract('ERC20Permit', function (accounts) {
 
       await expectRevert(
         this.token.permit(owner, spender, value, maxDeadline, v, r, s),
-        'ERC20Permit: invalid signature',
+        'ERC420Permit: invalid signature',
       );
     });
 
@@ -89,7 +89,7 @@ contract('ERC20Permit', function (accounts) {
 
       await expectRevert(
         this.token.permit(owner, spender, value, maxDeadline, v, r, s),
-        'ERC20Permit: invalid signature',
+        'ERC420Permit: invalid signature',
       );
     });
 
@@ -102,7 +102,7 @@ contract('ERC20Permit', function (accounts) {
 
       await expectRevert(
         this.token.permit(owner, spender, value, deadline, v, r, s),
-        'ERC20Permit: expired deadline',
+        'ERC420Permit: expired deadline',
       );
     });
   });

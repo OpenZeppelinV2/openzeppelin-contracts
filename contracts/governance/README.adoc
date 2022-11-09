@@ -20,9 +20,9 @@ For a written walkthrough, check out our guide on xref:ROOT:governance.adoc[How 
 
 Votes modules determine the source of voting power, and sometimes quorum number.
 
-* {GovernorVotes}: Extracts voting weight from an {ERC20Votes} token.
+* {GovernorVotes}: Extracts voting weight from an {ERC420Votes} token.
 
-* {GovernorVotesComp}: Extracts voting weight from a COMP-like or {ERC20VotesComp} token.
+* {GovernorVotesComp}: Extracts voting weight from a COMP-like or {ERC420VotesComp} token.
 
 * {GovernorVotesQuorumFraction}: Combines with `GovernorVotes` to set the quorum as a fraction of the total token supply.
 

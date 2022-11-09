@@ -1,9 +1,9 @@
 const { BN } = require('@openzeppelin/test-helpers');
 
-const { shouldBehaveLikeERC20Burnable } = require('./ERC20Burnable.behavior');
-const ERC20BurnableMock = artifacts.require('ERC20BurnableMock');
+const { shouldBehaveLikeERC420Burnable } = require('./ERC420Burnable.behavior');
+const ERC420BurnableMock = artifacts.require('ERC420BurnableMock');
 
-contract('ERC20Burnable', function (accounts) {
+contract('ERC420Burnable', function (accounts) {
   const [ owner, ...otherAccounts ] = accounts;
 
   const initialBalance = new BN(1000);
@@ -12,8 +12,8 @@ contract('ERC20Burnable', function (accounts) {
   const symbol = 'MTKN';
 
   beforeEach(async function () {
-    this.token = await ERC20BurnableMock.new(name, symbol, owner, initialBalance, { from: owner });
+    this.token = await ERC420BurnableMock.new(name, symbol, owner, initialBalance, { from: owner });
   });
 
-  shouldBehaveLikeERC20Burnable(owner, initialBalance, otherAccounts);
+  shouldBehaveLikeERC420Burnable(owner, initialBalance, otherAccounts);
 });

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC20/presets/ERC20PresetMinterPauser.sol)
+// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC420/presets/ERC420PresetMinterPauser.sol)
 
 pragma solidity ^0.8.0;
 
-import "../ERC20.sol";
-import "../extensions/ERC20Burnable.sol";
-import "../extensions/ERC20Pausable.sol";
+import "../ERC420.sol";
+import "../extensions/ERC420Burnable.sol";
+import "../extensions/ERC420Pausable.sol";
 import "../../../access/AccessControlEnumerable.sol";
 import "../../../utils/Context.sol";
 
 /**
- * @dev {ERC20} token, including:
+ * @dev {ERC420} token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
  *  - a minter role that allows for token minting (creation)
@@ -25,7 +25,7 @@ import "../../../utils/Context.sol";
  *
  * _Deprecated in favor of https://wizard.openzeppelin.com/[Contracts Wizard]._
  */
-contract ERC20PresetMinterPauser is Context, AccessControlEnumerable, ERC20Burnable, ERC20Pausable {
+contract ERC420PresetMinterPauser is Context, AccessControlEnumerable, ERC420Burnable, ERC420Pausable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -33,9 +33,9 @@ contract ERC20PresetMinterPauser is Context, AccessControlEnumerable, ERC20Burna
      * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
      * account that deploys the contract.
      *
-     * See {ERC20-constructor}.
+     * See {ERC420-constructor}.
      */
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+    constructor(string memory name, string memory symbol) ERC420(name, symbol) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
@@ -45,42 +45,42 @@ contract ERC20PresetMinterPauser is Context, AccessControlEnumerable, ERC20Burna
     /**
      * @dev Creates `amount` new tokens for `to`.
      *
-     * See {ERC20-_mint}.
+     * See {ERC420-_mint}.
      *
      * Requirements:
      *
      * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address to, uint256 amount) public virtual {
-        require(hasRole(MINTER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have minter role to mint");
+        require(hasRole(MINTER_ROLE, _msgSender()), "ERC420PresetMinterPauser: must have minter role to mint");
         _mint(to, amount);
     }
 
     /**
      * @dev Pauses all token transfers.
      *
-     * See {ERC20Pausable} and {Pausable-_pause}.
+     * See {ERC420Pausable} and {Pausable-_pause}.
      *
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
     function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have pauser role to pause");
+        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC420PresetMinterPauser: must have pauser role to pause");
         _pause();
     }
 
     /**
      * @dev Unpauses all token transfers.
      *
-     * See {ERC20Pausable} and {Pausable-_unpause}.
+     * See {ERC420Pausable} and {Pausable-_unpause}.
      *
      * Requirements:
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have pauser role to unpause");
+        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC420PresetMinterPauser: must have pauser role to unpause");
         _unpause();
     }
 
@@ -88,7 +88,7 @@ contract ERC20PresetMinterPauser is Context, AccessControlEnumerable, ERC20Burna
         address from,
         address to,
         uint256 amount
-    ) internal virtual override(ERC20, ERC20Pausable) {
+    ) internal virtual override(ERC420, ERC420Pausable) {
         super._beforeTokenTransfer(from, to, amount);
     }
 }

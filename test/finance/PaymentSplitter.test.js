@@ -4,7 +4,7 @@ const { ZERO_ADDRESS } = constants;
 const { expect } = require('chai');
 
 const PaymentSplitter = artifacts.require('PaymentSplitter');
-const Token = artifacts.require('ERC20Mock');
+const Token = artifacts.require('ERC420Mock');
 
 contract('PaymentSplitter', function (accounts) {
   const [ owner, payee1, payee2, payee3, nonpayee1, payer1 ] = accounts;
@@ -184,7 +184,7 @@ contract('PaymentSplitter', function (accounts) {
 
         expectEvent(
           await this.contract.release(this.token.address, payee1),
-          'ERC20PaymentReleased',
+          'ERC420PaymentReleased',
           { token: this.token.address, to: payee1, amount: ether('0.20') },
         );
 
@@ -192,19 +192,19 @@ contract('PaymentSplitter', function (accounts) {
 
         expectEvent(
           await this.contract.release(this.token.address, payee1),
-          'ERC20PaymentReleased',
+          'ERC420PaymentReleased',
           { token: this.token.address, to: payee1, amount: ether('0.20') },
         );
 
         expectEvent(
           await this.contract.release(this.token.address, payee2),
-          'ERC20PaymentReleased',
+          'ERC420PaymentReleased',
           { token: this.token.address, to: payee2, amount: ether('0.20') },
         );
 
         expectEvent(
           await this.contract.release(this.token.address, payee3),
-          'ERC20PaymentReleased',
+          'ERC420PaymentReleased',
           { token: this.token.address, to: payee3, amount: ether('1.40') },
         );
 

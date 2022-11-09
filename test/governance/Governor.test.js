@@ -11,7 +11,7 @@ const {
   shouldSupportInterfaces,
 } = require('../utils/introspection/SupportsInterface.behavior');
 
-const Token = artifacts.require('ERC20VotesMock');
+const Token = artifacts.require('ERC420VotesMock');
 const Governor = artifacts.require('GovernorMock');
 const CallReceiver = artifacts.require('CallReceiverMock');
 const ERC721Mock = artifacts.require('ERC721Mock');

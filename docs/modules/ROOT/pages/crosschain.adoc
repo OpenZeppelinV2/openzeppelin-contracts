@@ -4,22 +4,22 @@ If your contract is targeting to be used in the context of multichain operations
 
 OpenZeppelin provides the xref:api:crosschain.adoc#CrossChainEnabled[`CrossChainEnabled`] abstract contract, that includes dedicated internal functions.
 
-In this guide, we will go through an example use case: _how to build an upgradeable & mintable ERC20 token controlled by a governor present on a foreign chain_.
+In this guide, we will go through an example use case: _how to build an upgradeable & mintable ERC420 token controlled by a governor present on a foreign chain_.
 
-== Starting point, our ERC20 contract
+== Starting point, our ERC420 contract
 
-Let's start with a small ERC20 contract, that we bootstrapped using the https://wizard.openzeppelin.com/[OpenZeppelin Contracts Wizard], and extended with an owner that has the ability to mint. Note that for demonstration purposes we have not used the built-in `Ownable` contract.
+Let's start with a small ERC420 contract, that we bootstrapped using the https://wizard.openzeppelin.com/[OpenZeppelin Contracts Wizard], and extended with an owner that has the ability to mint. Note that for demonstration purposes we have not used the built-in `Ownable` contract.
 
 [source,solidity]
 ----
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC420/ERC420Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract MyToken is Initializable, ERC20Upgradeable, UUPSUpgradeable {
+contract MyToken is Initializable, ERC420Upgradeable, UUPSUpgradeable {
     address public owner;
 
     modifier onlyOwner() {
@@ -31,7 +31,7 @@ contract MyToken is Initializable, ERC20Upgradeable, UUPSUpgradeable {
     constructor() initializer {}
 
     function initialize(address initialOwner) initializer public {
-        __ERC20_init("MyToken", "MTK");
+        __ERC420_init("MyToken", "MTK");
         __UUPSUpgradeable_init();
 
         owner = initialOwner;
@@ -60,8 +60,8 @@ In order to do that, we will start by adding xref:api:crosschain.adoc#CrossChain
  import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 +import "@openzeppelin/contracts-upgradeable/crosschain/CrossChainEnabled.sol";
 
--contract MyToken is Initializable, ERC20Upgradeable, UUPSUpgradeable {
-+abstract contract MyTokenCrossChain is Initializable, ERC20Upgradeable, UUPSUpgradeable, CrossChainEnabled {
+-contract MyToken is Initializable, ERC420Upgradeable, UUPSUpgradeable {
++abstract contract MyTokenCrossChain is Initializable, ERC420Upgradeable, UUPSUpgradeable, CrossChainEnabled {
 ```
 
 Once that is done, we can use the `onlyCrossChainSender` modifier, provided by `CrossChainEnabled` in order to protect the minting and upgrading operations.
@@ -128,12 +128,12 @@ In the case of the `mint` function, the caller must have the `MINTER_ROLE` when 
 
 
 ```diff
- import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+ import "@openzeppelin/contracts-upgradeable/token/ERC420/ERC420Upgradeable.sol";
  import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 +import "@openzeppelin/contracts-upgradeable/access/AccessControlCrossChainUpgradeable.sol";
 
--abstract contract MyTokenCrossChain is Initializable, ERC20Upgradeable, UUPSUpgradeable, CrossChainEnabled {
-+abstract contract MyTokenCrossChain is Initializable, ERC20Upgradeable, UUPSUpgradeable, AccessControlCrossChainUpgradeable {
+-abstract contract MyTokenCrossChain is Initializable, ERC420Upgradeable, UUPSUpgradeable, CrossChainEnabled {
++abstract contract MyTokenCrossChain is Initializable, ERC420Upgradeable, UUPSUpgradeable, AccessControlCrossChainUpgradeable {
 
 -    address public owner;
 -    modifier onlyOwner() {
@@ -145,7 +145,7 @@ In the case of the `mint` function, the caller must have the `MINTER_ROLE` when 
 +    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
      function initialize(address initialOwner) initializer public {
-         __ERC20_init("MyToken", "MTK");
+         __ERC420_init("MyToken", "MTK");
          __UUPSUpgradeable_init();
 +        __AccessControl_init();
 +        _grantRole(_crossChainRoleAlias(DEFAULT_ADMIN_ROLE), initialOwner); // initialOwner is on a remote chain
@@ -166,12 +166,12 @@ This results in the following, final, code:
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC420/ERC420Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlCrossChainUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-abstract contract MyTokenCrossChain is Initializable, ERC20Upgradeable, AccessControlCrossChainUpgradeable, UUPSUpgradeable {
+abstract contract MyTokenCrossChain is Initializable, ERC420Upgradeable, AccessControlCrossChainUpgradeable, UUPSUpgradeable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
 
@@ -179,7 +179,7 @@ abstract contract MyTokenCrossChain is Initializable, ERC20Upgradeable, AccessCo
     constructor() initializer {}
 
     function initialize(address initialOwner) initializer public {
-        __ERC20_init("MyToken", "MTK");
+        __ERC420_init("MyToken", "MTK");
         __AccessControl_init();
         __UUPSUpgradeable_init();
 

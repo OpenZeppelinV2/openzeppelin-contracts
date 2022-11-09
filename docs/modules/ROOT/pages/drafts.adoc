@@ -2,9 +2,9 @@
 
 All draft contracts were either moved into a different directory or removed from the OpenZeppelin Contracts library on the https://forum.openzeppelin.com/t/openzeppelin-contracts-v3-0-beta-release/2256[v3.0.0 release].
 
-* `ERC20Migrator`: removed.
-* xref:api:token/ERC20.adoc#ERC20Snapshot[`ERC20Snapshot`]: moved to `token/ERC20`.
-* `ERC20Detailed` and `ERC1046`: removed.
+* `ERC420Migrator`: removed.
+* xref:api:token/ERC420.adoc#ERC420Snapshot[`ERC420Snapshot`]: moved to `token/ERC420`.
+* `ERC420Detailed` and `ERC1046`: removed.
 * `TokenVesting`: removed. Pending a replacement that is being discussed in https://github.com/OpenZeppelin/openzeppelin-contracts/issues/1214[`#1214`].
 * xref:api:utils.adoc#Counters[`Counters`]: moved to xref:api:utils.adoc[`utils`].
 * xref:api:utils.adoc#Strings[`Strings`]: moved to xref:api:utils.adoc[`utils`].

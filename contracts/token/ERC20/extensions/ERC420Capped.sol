@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/ERC20Capped.sol)
+// OpenZeppelin Contracts v4.4.1 (token/ERC420/extensions/ERC420Capped.sol)
 
 pragma solidity ^0.8.0;
 
-import "../ERC20.sol";
+import "../ERC420.sol";
 
 /**
- * @dev Extension of {ERC20} that adds a cap to the supply of tokens.
+ * @dev Extension of {ERC420} that adds a cap to the supply of tokens.
  */
-abstract contract ERC20Capped is ERC20 {
+abstract contract ERC420Capped is ERC420 {
     uint256 private immutable _cap;
 
     /**
@@ -16,7 +16,7 @@ abstract contract ERC20Capped is ERC20 {
      * set once during construction.
      */
     constructor(uint256 cap_) {
-        require(cap_ > 0, "ERC20Capped: cap is 0");
+        require(cap_ > 0, "ERC420Capped: cap is 0");
         _cap = cap_;
     }
 
@@ -28,10 +28,10 @@ abstract contract ERC20Capped is ERC20 {
     }
 
     /**
-     * @dev See {ERC20-_mint}.
+     * @dev See {ERC420-_mint}.
      */
     function _mint(address account, uint256 amount) internal virtual override {
-        require(ERC20.totalSupply() + amount <= cap(), "ERC20Capped: cap exceeded");
+        require(ERC420.totalSupply() + amount <= cap(), "ERC420Capped: cap exceeded");
         super._mint(account, amount);
     }
 }

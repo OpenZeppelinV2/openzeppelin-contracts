@@ -2,16 +2,16 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/ERC20.sol";
+import "../token/ERC420/ERC420.sol";
 
-contract ERC20DecimalsMock is ERC20 {
+contract ERC420DecimalsMock is ERC420 {
     uint8 private immutable _decimals;
 
     constructor(
         string memory name_,
         string memory symbol_,
         uint8 decimals_
-    ) ERC20(name_, symbol_) {
+    ) ERC420(name_, symbol_) {
         _decimals = decimals_;
     }
 

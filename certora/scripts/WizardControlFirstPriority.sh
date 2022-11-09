@@ -1,7 +1,7 @@
 make -C certora munged
 
-certoraRun certora/harnesses/ERC20VotesHarness.sol certora/harnesses/WizardControlFirstPriority.sol \
-    --link WizardControlFirstPriority:token=ERC20VotesHarness \
+certoraRun certora/harnesses/ERC420VotesHarness.sol certora/harnesses/WizardControlFirstPriority.sol \
+    --link WizardControlFirstPriority:token=ERC420VotesHarness \
     --verify WizardControlFirstPriority:certora/specs/GovernorBase.spec \
     --solc solc8.2 \
     --disableLocalTypeChecking \

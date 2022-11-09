@@ -2,7 +2,7 @@ const { BN, expectRevert, time } = require('@openzeppelin/test-helpers');
 
 const { expect } = require('chai');
 
-const ERC20Mock = artifacts.require('ERC20Mock');
+const ERC420Mock = artifacts.require('ERC420Mock');
 const TokenTimelock = artifacts.require('TokenTimelock');
 
 contract('TokenTimelock', function (accounts) {
@@ -15,7 +15,7 @@ contract('TokenTimelock', function (accounts) {
 
   context('with token', function () {
     beforeEach(async function () {
-      this.token = await ERC20Mock.new(name, symbol, beneficiary, 0); // We're not using the preminted tokens
+      this.token = await ERC420Mock.new(name, symbol, beneficiary, 0); // We're not using the preminted tokens
     });
 
     it('rejects a release time in the past', async function () {

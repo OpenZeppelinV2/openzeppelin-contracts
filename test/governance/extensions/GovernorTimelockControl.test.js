@@ -7,7 +7,7 @@ const {
   shouldSupportInterfaces,
 } = require('../../utils/introspection/SupportsInterface.behavior');
 
-const Token = artifacts.require('ERC20VotesMock');
+const Token = artifacts.require('ERC420VotesMock');
 const Timelock = artifacts.require('TimelockController');
 const Governor = artifacts.require('GovernorTimelockControlMock');
 const CallReceiver = artifacts.require('CallReceiverMock');

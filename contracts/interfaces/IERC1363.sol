@@ -3,10 +3,10 @@
 
 pragma solidity ^0.8.0;
 
-import "./IERC20.sol";
+import "./IERC420.sol";
 import "./IERC165.sol";
 
-interface IERC1363 is IERC165, IERC20 {
+interface IERC1363 is IERC165, IERC420 {
     /*
      * Note: the ERC-165 identifier for this interface is 0x4bbee2df.
      * 0x4bbee2df ===

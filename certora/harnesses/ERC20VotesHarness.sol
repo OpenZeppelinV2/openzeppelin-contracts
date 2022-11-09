@@ -1,7 +1,7 @@
-import "../munged/token/ERC20/extensions/ERC20Votes.sol";
+import "../munged/token/ERC420/extensions/ERC420Votes.sol";
 
-contract ERC20VotesHarness is ERC20Votes {
-    constructor(string memory name, string memory symbol) ERC20Permit(name) ERC20(name, symbol) {}
+contract ERC420VotesHarness is ERC420Votes {
+    constructor(string memory name, string memory symbol) ERC420Permit(name) ERC420(name, symbol) {}
 
     mapping(address => mapping(uint256 => uint256)) public _getPastVotes;
 

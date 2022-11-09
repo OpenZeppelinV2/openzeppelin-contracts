@@ -14,9 +14,9 @@ This governance protocol is generally implemented in a special-purpose contract 
 
 OpenZeppelin’s Governor system was designed with a concern for compatibility with existing systems that were based on Compound’s GovernorAlpha and GovernorBravo. Because of this, you will find that many modules are presented in two variants, one of which is built for compatibility with those systems.
 
-=== ERC20Votes & ERC20VotesComp
+=== ERC420Votes & ERC420VotesComp
 
-The ERC20 extension to keep track of votes and vote delegation is one such case. The shorter one is the more generic version because it can support token supplies greater than 2^96, while the “Comp” variant is limited in that regard, but exactly fits the interface of the COMP token that is used by GovernorAlpha and Bravo. Both contract variants share the same events, so they are fully compatible when looking at events only.
+The ERC420 extension to keep track of votes and vote delegation is one such case. The shorter one is the more generic version because it can support token supplies greater than 2^96, while the “Comp” variant is limited in that regard, but exactly fits the interface of the COMP token that is used by GovernorAlpha and Bravo. Both contract variants share the same events, so they are fully compatible when looking at events only.
 
 === Governor & GovernorCompatibilityBravo
 
@@ -38,88 +38,88 @@ In the rest of this guide, we will focus on a fresh deploy of the vanilla OpenZe
 
 === Token
 
-The voting power of each account in our governance setup will be determined by an ERC20 token. The token has to implement the ERC20Votes extension. This extension will keep track of historical balances so that voting power is retrieved from past snapshots rather than current balance, which is an important protection that prevents double voting.
+The voting power of each account in our governance setup will be determined by an ERC420 token. The token has to implement the ERC420Votes extension. This extension will keep track of historical balances so that voting power is retrieved from past snapshots rather than current balance, which is an important protection that prevents double voting.
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "@openzeppelin/contracts/token/ERC420/ERC420.sol";
+import "@openzeppelin/contracts/token/ERC420/extensions/ERC420Permit.sol";
+import "@openzeppelin/contracts/token/ERC420/extensions/ERC420Votes.sol";
 
-contract MyToken is ERC20, ERC20Permit, ERC20Votes {
-    constructor() ERC20("MyToken", "MTK") ERC20Permit("MyToken") {}
+contract MyToken is ERC420, ERC420Permit, ERC420Votes {
+    constructor() ERC420("MyToken", "MTK") ERC420Permit("MyToken") {}
 
     // The functions below are overrides required by Solidity.
 
     function _afterTokenTransfer(address from, address to, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._afterTokenTransfer(from, to, amount);
     }
 
     function _mint(address to, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._mint(to, amount);
     }
 
     function _burn(address account, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._burn(account, amount);
     }
 }
 ```
 
-If your project already has a live token that does not include ERC20Votes and is not upgradeable, you can wrap it in a governance token by using ERC20Wrapper. This will allow token holders to participate in governance by wrapping their tokens 1-to-1.
+If your project already has a live token that does not include ERC420Votes and is not upgradeable, you can wrap it in a governance token by using ERC420Wrapper. This will allow token holders to participate in governance by wrapping their tokens 1-to-1.
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Wrapper.sol";
+import "@openzeppelin/contracts/token/ERC420/ERC420.sol";
+import "@openzeppelin/contracts/token/ERC420/extensions/ERC420Permit.sol";
+import "@openzeppelin/contracts/token/ERC420/extensions/ERC420Votes.sol";
+import "@openzeppelin/contracts/token/ERC420/extensions/ERC420Wrapper.sol";
 
-contract MyToken is ERC20, ERC20Permit, ERC20Votes, ERC20Wrapper {
-    constructor(IERC20 wrappedToken)
-        ERC20("MyToken", "MTK")
-        ERC20Permit("MyToken")
-        ERC20Wrapper(wrappedToken)
+contract MyToken is ERC420, ERC420Permit, ERC420Votes, ERC420Wrapper {
+    constructor(IERC420 wrappedToken)
+        ERC420("MyToken", "MTK")
+        ERC420Permit("MyToken")
+        ERC420Wrapper(wrappedToken)
     {}
 
     // The functions below are overrides required by Solidity.
 
     function _afterTokenTransfer(address from, address to, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._afterTokenTransfer(from, to, amount);
     }
 
     function _mint(address to, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._mint(to, amount);
     }
 
     function _burn(address account, uint256 amount)
         internal
-        override(ERC20, ERC20Votes)
+        override(ERC420, ERC420Votes)
     {
         super._burn(account, amount);
     }
 }
 ```
 
-NOTE: Voting power could be determined in different ways: multiple ERC20 tokens, ERC721 tokens, sybil resistant identities, etc. All of these options are potentially supported by writing a custom Votes module for your Governor. The only other source of voting power available in OpenZeppelin Contracts currently is xref:api:token/ERC721.adoc#ERC721Votes[`ERC721Votes`].
+NOTE: Voting power could be determined in different ways: multiple ERC420 tokens, ERC721 tokens, sybil resistant identities, etc. All of these options are potentially supported by writing a custom Votes module for your Governor. The only other source of voting power available in OpenZeppelin Contracts currently is xref:api:token/ERC721.adoc#ERC721Votes[`ERC721Votes`].
 
 === Governor
 
@@ -127,7 +127,7 @@ Initially, we will build a Governor without a timelock. The core logic is given 
 
 For 1) we will use the GovernorVotes module, which hooks to an IVotes instance to determine the voting power of an account based on the token balance they hold when a proposal becomes active. This module requires as a constructor parameter the address of the token.
 
-For 2) we will use GovernorVotesQuorumFraction which works together with ERC20Votes to define quorum as a percentage of the total supply at the block a proposal’s voting power is retrieved. This requires a constructor parameter to set the percentage. Most Governors nowadays use 4%, so we will initialize the module with parameter 4 (this indicates the percentage, resulting in 4%).
+For 2) we will use GovernorVotesQuorumFraction which works together with ERC420Votes to define quorum as a percentage of the total supply at the block a proposal’s voting power is retrieved. This requires a constructor parameter to set the percentage. Most Governors nowadays use 4%, so we will initialize the module with parameter 4 (this indicates the percentage, resulting in 4%).
 
 For 3) we will use GovernorCountingSimple, a module that offers 3 options to voters: For, Against, and Abstain, and where only For and Abstain votes are counted towards quorum.
 
@@ -264,7 +264,7 @@ A proposal is a sequence of actions that the Governor contract will perform if i
 
 === Create a Proposal
 
-Let’s say we want to create a proposal to give a team a grant, in the form of ERC20 tokens from the governance treasury. This proposal will consist of a single action where the target is the ERC20 token, calldata is the encoded function call `transfer(<team wallet>, <grant amount>)`, and with 0 ETH attached.
+Let’s say we want to create a proposal to give a team a grant, in the form of ERC420 tokens from the governance treasury. This proposal will consist of a single action where the target is the ERC420 token, calldata is the encoded function call `transfer(<team wallet>, <grant amount>)`, and with 0 ETH attached.
 
 Generally a proposal will be created with the help of an interface such as Tally or Defender. Here we will show how to create the proposal using Ethers.js.
 
@@ -272,7 +272,7 @@ First we get all the parameters necessary for the proposal action.
 
 ```javascript
 const tokenAddress = ...;
-const token = await ethers.getContractAt(‘ERC20’, tokenAddress);
+const token = await ethers.getContractAt(‘ERC420’, tokenAddress);
 
 const teamAddress = ...;
 const grantAmount = ...;
@@ -336,4 +336,4 @@ await governor.execute(
 );
 ```
 
-Executing the proposal will transfer the ERC20 tokens to the chosen recipient. To wrap up: we set up a system where a treasury is controlled by the collective decision of the token holders of a project, and all actions are executed via proposals enforced by on-chain votes.
+Executing the proposal will transfer the ERC420 tokens to the chosen recipient. To wrap up: we set up a system where a treasury is controlled by the collective decision of the token holders of a project, and all actions are executed via proposals enforced by on-chain votes.

@@ -4,7 +4,7 @@ const { expect } = require('chai');
 
 function releasedEvent (token, amount) {
   return token
-    ? [ 'ERC20Released', { token: token.address, amount } ]
+    ? [ 'ERC420Released', { token: token.address, amount } ]
     : [ 'EtherReleased', { amount } ];
 }
 

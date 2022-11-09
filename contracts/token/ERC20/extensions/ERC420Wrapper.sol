@@ -1,32 +1,32 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/extensions/ERC20Wrapper.sol)
+// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC420/extensions/ERC420Wrapper.sol)
 
 pragma solidity ^0.8.0;
 
-import "../ERC20.sol";
-import "../utils/SafeERC20.sol";
+import "../ERC420.sol";
+import "../utils/SafeERC420.sol";
 
 /**
- * @dev Extension of the ERC20 token contract to support token wrapping.
+ * @dev Extension of the ERC420 token contract to support token wrapping.
  *
  * Users can deposit and withdraw "underlying tokens" and receive a matching number of "wrapped tokens". This is useful
- * in conjunction with other modules. For example, combining this wrapping mechanism with {ERC20Votes} will allow the
- * wrapping of an existing "basic" ERC20 into a governance token.
+ * in conjunction with other modules. For example, combining this wrapping mechanism with {ERC420Votes} will allow the
+ * wrapping of an existing "basic" ERC420 into a governance token.
  *
  * _Available since v4.2._
  */
-abstract contract ERC20Wrapper is ERC20 {
-    IERC20 public immutable underlying;
+abstract contract ERC420Wrapper is ERC420 {
+    IERC420 public immutable underlying;
 
-    constructor(IERC20 underlyingToken) {
+    constructor(IERC420 underlyingToken) {
         underlying = underlyingToken;
     }
 
     /**
-     * @dev See {ERC20-decimals}.
+     * @dev See {ERC420-decimals}.
      */
     function decimals() public view virtual override returns (uint8) {
-        try IERC20Metadata(address(underlying)).decimals() returns (uint8 value) {
+        try IERC420Metadata(address(underlying)).decimals() returns (uint8 value) {
             return value;
         } catch {
             return super.decimals();
@@ -37,7 +37,7 @@ abstract contract ERC20Wrapper is ERC20 {
      * @dev Allow a user to deposit underlying tokens and mint the corresponding number of wrapped tokens.
      */
     function depositFor(address account, uint256 amount) public virtual returns (bool) {
-        SafeERC20.safeTransferFrom(underlying, _msgSender(), address(this), amount);
+        SafeERC420.safeTransferFrom(underlying, _msgSender(), address(this), amount);
         _mint(account, amount);
         return true;
     }
@@ -47,7 +47,7 @@ abstract contract ERC20Wrapper is ERC20 {
      */
     function withdrawTo(address account, uint256 amount) public virtual returns (bool) {
         _burn(_msgSender(), amount);
-        SafeERC20.safeTransfer(underlying, account, amount);
+        SafeERC420.safeTransfer(underlying, account, amount);
         return true;
     }
 

@@ -7,8 +7,8 @@ NOTE: This document is better viewed at https://docs.openzeppelin.com/contracts/
 These interfaces are available as `.sol` files, and also as compiler `.json` ABI files (through the npm package). These
 are useful to interact with third party contracts that implement them.
 
-- {IERC20}
-- {IERC20Metadata}
+- {IERC420}
+- {IERC420Metadata}
 - {IERC165}
 - {IERC721}
 - {IERC721Receiver}

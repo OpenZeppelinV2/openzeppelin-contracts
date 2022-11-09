@@ -43,7 +43,7 @@ If new functions are added to a contract, it will be in a backwards-compatible w
 [[internal]]
 ==== `internal`
 
-This extends not only to `external` and `public` functions, but also `internal` ones: many contracts are meant to be used by inheriting them (e.g. `Pausable`, `PullPayment`, `AccessControl`), and are therefore used by calling these functions. Similarly, since all OpenZeppelin Contracts state variables are `private`, they can only be accessed this way (e.g. to create new `ERC20` tokens, instead of manually modifying `totalSupply` and `balances`, `_mint` should be called).
+This extends not only to `external` and `public` functions, but also `internal` ones: many contracts are meant to be used by inheriting them (e.g. `Pausable`, `PullPayment`, `AccessControl`), and are therefore used by calling these functions. Similarly, since all OpenZeppelin Contracts state variables are `private`, they can only be accessed this way (e.g. to create new `ERC420` tokens, instead of manually modifying `totalSupply` and `balances`, `_mint` should be called).
 
 `private` functions have no guarantees on their behavior, usage, or existence.
 
@@ -57,7 +57,7 @@ Some of our Solidity libraries use ``struct``s to handle internal data that shou
 [[events]]
 === Events
 
-No events will be removed, and their arguments won't be changed in any way. New events may be added in later versions, and existing events may be emitted under new, reasonable circumstances (e.g. https://github.com/OpenZeppelin/openzeppelin-contracts/issues/707[from 2.1 on, `ERC20` also emits `Approval` on `transferFrom` calls]).
+No events will be removed, and their arguments won't be changed in any way. New events may be added in later versions, and existing events may be emitted under new, reasonable circumstances (e.g. https://github.com/OpenZeppelin/openzeppelin-contracts/issues/707[from 2.1 on, `ERC420` also emits `Approval` on `transferFrom` calls]).
 
 [[drafts]]
 === Drafts

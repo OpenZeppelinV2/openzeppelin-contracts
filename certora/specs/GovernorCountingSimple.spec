@@ -1,6 +1,6 @@
 import "GovernorBase.spec"
 
-using ERC20VotesHarness as erc20votes
+using ERC420VotesHarness as erc20votes
 
 methods {
     ghost_sum_vote_power_by_id(uint256) returns uint256 envfree

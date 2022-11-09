@@ -3,9 +3,9 @@ const { ZERO_ADDRESS } = constants;
 
 const { expect } = require('chai');
 
-const ERC20PresetMinterPauser = artifacts.require('ERC20PresetMinterPauser');
+const ERC420PresetMinterPauser = artifacts.require('ERC420PresetMinterPauser');
 
-contract('ERC20PresetMinterPauser', function (accounts) {
+contract('ERC420PresetMinterPauser', function (accounts) {
   const [ deployer, other ] = accounts;
 
   const name = 'MinterPauserToken';
@@ -18,7 +18,7 @@ contract('ERC20PresetMinterPauser', function (accounts) {
   const PAUSER_ROLE = web3.utils.soliditySha3('PAUSER_ROLE');
 
   beforeEach(async function () {
-    this.token = await ERC20PresetMinterPauser.new(name, symbol, { from: deployer });
+    this.token = await ERC420PresetMinterPauser.new(name, symbol, { from: deployer });
   });
 
   it('deployer has the default admin role', async function () {
@@ -52,7 +52,7 @@ contract('ERC20PresetMinterPauser', function (accounts) {
     it('other accounts cannot mint tokens', async function () {
       await expectRevert(
         this.token.mint(other, amount, { from: other }),
-        'ERC20PresetMinterPauser: must have minter role to mint',
+        'ERC420PresetMinterPauser: must have minter role to mint',
       );
     });
   });
@@ -79,14 +79,14 @@ contract('ERC20PresetMinterPauser', function (accounts) {
 
       await expectRevert(
         this.token.mint(other, amount, { from: deployer }),
-        'ERC20Pausable: token transfer while paused',
+        'ERC420Pausable: token transfer while paused',
       );
     });
 
     it('other accounts cannot pause', async function () {
       await expectRevert(
         this.token.pause({ from: other }),
-        'ERC20PresetMinterPauser: must have pauser role to pause',
+        'ERC420PresetMinterPauser: must have pauser role to pause',
       );
     });
 
@@ -95,7 +95,7 @@ contract('ERC20PresetMinterPauser', function (accounts) {
 
       await expectRevert(
         this.token.unpause({ from: other }),
-        'ERC20PresetMinterPauser: must have pauser role to unpause',
+        'ERC420PresetMinterPauser: must have pauser role to unpause',
       );
     });
   });

@@ -4,7 +4,7 @@
 pragma solidity ^0.8.0;
 
 import "../Governor.sol";
-import "../../token/ERC20/extensions/ERC20VotesComp.sol";
+import "../../token/ERC420/extensions/ERC420VotesComp.sol";
 
 /**
  * @dev Extension of {Governor} for voting weight extraction from a Comp token.
@@ -12,9 +12,9 @@ import "../../token/ERC20/extensions/ERC20VotesComp.sol";
  * _Available since v4.3._
  */
 abstract contract GovernorVotesComp is Governor {
-    ERC20VotesComp public immutable token;
+    ERC420VotesComp public immutable token;
 
-    constructor(ERC20VotesComp token_) {
+    constructor(ERC420VotesComp token_) {
         token = token_;
     }
 

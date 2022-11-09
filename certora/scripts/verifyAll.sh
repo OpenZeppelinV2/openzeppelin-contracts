@@ -13,8 +13,8 @@ do
             echo "Processing ${contractFile%.*} with $specFile"
             if [[ "${contractFile%.*}" = *"WizardControl"* ]];
             then
-                certoraRun certora/harnesses/ERC20VotesHarness.sol certora/harnesses/$contractFile \
-                --link ${contractFile%.*}:token=ERC20VotesHarness \
+                certoraRun certora/harnesses/ERC420VotesHarness.sol certora/harnesses/$contractFile \
+                --link ${contractFile%.*}:token=ERC420VotesHarness \
                 --verify ${contractFile%.*}:certora/specs/$specFile "$@" \
                 --solc solc8.2 \
                 --staging shelly/forSasha \
@@ -24,7 +24,7 @@ do
                 --send_only \
                 --msg "checking $specFile on ${contractFile%.*}"
             else
-                certoraRun certora/harnesses/ERC20VotesHarness.sol certora/harnesses/$contractFile \
+                certoraRun certora/harnesses/ERC420VotesHarness.sol certora/harnesses/$contractFile \
                 --verify ${contractFile%.*}:certora/specs/$specFile "$@" \
                 --solc solc8.2 \
                 --staging shelly/forSasha \

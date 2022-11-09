@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC20/utils/TokenTimelock.sol)
+// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC420/utils/TokenTimelock.sol)
 
 pragma solidity ^0.8.0;
 
-import "./SafeERC20.sol";
+import "./SafeERC420.sol";
 
 /**
  * @dev A token holder contract that will allow a beneficiary to extract the
@@ -13,10 +13,10 @@ import "./SafeERC20.sol";
  * after 1 year".
  */
 contract TokenTimelock {
-    using SafeERC20 for IERC20;
+    using SafeERC420 for IERC420;
 
-    // ERC20 basic token contract being held
-    IERC20 private immutable _token;
+    // ERC420 basic token contract being held
+    IERC420 private immutable _token;
 
     // beneficiary of tokens after they are released
     address private immutable _beneficiary;
@@ -30,7 +30,7 @@ contract TokenTimelock {
      * (in seconds).
      */
     constructor(
-        IERC20 token_,
+        IERC420 token_,
         address beneficiary_,
         uint256 releaseTime_
     ) {
@@ -43,7 +43,7 @@ contract TokenTimelock {
     /**
      * @dev Returns the token being held.
      */
-    function token() public view virtual returns (IERC20) {
+    function token() public view virtual returns (IERC420) {
         return _token;
     }
 

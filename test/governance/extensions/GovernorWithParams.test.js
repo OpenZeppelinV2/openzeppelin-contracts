@@ -7,7 +7,7 @@ const Enums = require('../../helpers/enums');
 const { EIP712Domain } = require('../../helpers/eip712');
 const { GovernorHelper } = require('../../helpers/governance');
 
-const Token = artifacts.require('ERC20VotesCompMock');
+const Token = artifacts.require('ERC420VotesCompMock');
 const Governor = artifacts.require('GovernorWithParamsMock');
 const CallReceiver = artifacts.require('CallReceiverMock');
 

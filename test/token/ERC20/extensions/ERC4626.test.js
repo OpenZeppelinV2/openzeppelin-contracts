@@ -1,7 +1,7 @@
 const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
-const ERC20DecimalsMock = artifacts.require('ERC20DecimalsMock');
+const ERC420DecimalsMock = artifacts.require('ERC420DecimalsMock');
 const ERC4626Mock = artifacts.require('ERC4626Mock');
 const ERC4626DecimalMock = artifacts.require('ERC4626DecimalMock');
 
@@ -15,7 +15,7 @@ contract('ERC4626', function (accounts) {
   const symbol = 'MTKN';
 
   beforeEach(async function () {
-    this.token = await ERC20DecimalsMock.new(name, symbol, 12);
+    this.token = await ERC420DecimalsMock.new(name, symbol, 12);
     this.vault = await ERC4626DecimalMock.new(this.token.address, name + ' Vault', symbol + 'V', 18);
 
     await this.token.mint(holder, web3.utils.toWei('100'));
@@ -32,7 +32,7 @@ contract('ERC4626', function (accounts) {
 
   it('inherit decimals if from asset', async function () {
     for (const decimals of [ 0, 9, 12, 18, 36 ].map(web3.utils.toBN)) {
-      const token = await ERC20DecimalsMock.new('', '', decimals);
+      const token = await ERC420DecimalsMock.new('', '', decimals);
       const vault = await ERC4626Mock.new(token.address, '', '');
       expect(await vault.decimals()).to.be.bignumber.equal(decimals);
     }
@@ -370,7 +370,7 @@ contract('ERC4626', function (accounts) {
     it('withdraw with approval', async function () {
       await expectRevert(
         this.vault.withdraw(parseToken(1), recipient, holder, { from: other }),
-        'ERC20: insufficient allowance',
+        'ERC420: insufficient allowance',
       );
 
       await this.vault.withdraw(parseToken(1), recipient, holder, { from: spender });
@@ -398,7 +398,7 @@ contract('ERC4626', function (accounts) {
     it('redeem with approval', async function () {
       await expectRevert(
         this.vault.redeem(parseShare(100), recipient, holder, { from: other }),
-        'ERC20: insufficient allowance',
+        'ERC420: insufficient allowance',
       );
 
       await this.vault.redeem(parseShare(100), recipient, holder, { from: spender });
@@ -409,7 +409,7 @@ contract('ERC4626', function (accounts) {
   /// https://github.com/transmissions11/solmate/blob/main/src/test/ERC4626.t.sol
   it('multiple mint, deposit, redeem & withdrawal', async function () {
     // test designed with both asset using similar decimals
-    this.token = await ERC20DecimalsMock.new(name, symbol, 18);
+    this.token = await ERC420DecimalsMock.new(name, symbol, 18);
     this.vault = await ERC4626Mock.new(this.token.address, name + ' Vault', symbol + 'V');
 
     await this.token.mint(user1, 4000);

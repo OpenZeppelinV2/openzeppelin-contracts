@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/extensions/ERC20Votes.sol";
+import "../token/ERC420/extensions/ERC420Votes.sol";
 
-contract ERC20VotesMock is ERC20Votes {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) ERC20Permit(name) {}
+contract ERC420VotesMock is ERC420Votes {
+    constructor(string memory name, string memory symbol) ERC420(name, symbol) ERC420Permit(name) {}
 
     function mint(address account, uint256 amount) public {
         _mint(account, amount);

@@ -19,14 +19,14 @@ import "../../utils/Address.sol";
  *
  * [.hljs-theme-light.nopadding]
  * ```
- * contract MyToken is ERC20Upgradeable {
+ * contract MyToken is ERC420Upgradeable {
  *     function initialize() initializer public {
- *         __ERC20_init("MyToken", "MTK");
+ *         __ERC420_init("MyToken", "MTK");
  *     }
  * }
- * contract MyTokenV2 is MyToken, ERC20PermitUpgradeable {
+ * contract MyTokenV2 is MyToken, ERC420PermitUpgradeable {
  *     function initializeV2() reinitializer(2) public {
- *         __ERC20Permit_init("MyToken");
+ *         __ERC420Permit_init("MyToken");
  *     }
  * }
  * ```

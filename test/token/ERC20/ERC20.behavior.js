@@ -2,7 +2,7 @@ const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test
 const { expect } = require('chai');
 const { ZERO_ADDRESS, MAX_UINT256 } = constants;
 
-function shouldBehaveLikeERC20 (errorPrefix, initialSupply, initialHolder, recipient, anotherAccount) {
+function shouldBehaveLikeERC420 (errorPrefix, initialSupply, initialHolder, recipient, anotherAccount) {
   describe('total supply', function () {
     it('returns the total amount of tokens', async function () {
       expect(await this.token.totalSupply()).to.be.bignumber.equal(initialSupply);
@@ -24,7 +24,7 @@ function shouldBehaveLikeERC20 (errorPrefix, initialSupply, initialHolder, recip
   });
 
   describe('transfer', function () {
-    shouldBehaveLikeERC20Transfer(errorPrefix, initialHolder, recipient, initialSupply,
+    shouldBehaveLikeERC420Transfer(errorPrefix, initialHolder, recipient, initialSupply,
       function (from, to, value) {
         return this.token.transfer(to, value, { from });
       },
@@ -180,7 +180,7 @@ function shouldBehaveLikeERC20 (errorPrefix, initialSupply, initialHolder, recip
   });
 
   describe('approve', function () {
-    shouldBehaveLikeERC20Approve(errorPrefix, initialHolder, recipient, initialSupply,
+    shouldBehaveLikeERC420Approve(errorPrefix, initialHolder, recipient, initialSupply,
       function (owner, spender, amount) {
         return this.token.approve(spender, amount, { from: owner });
       },
@@ -188,7 +188,7 @@ function shouldBehaveLikeERC20 (errorPrefix, initialSupply, initialHolder, recip
   });
 }
 
-function shouldBehaveLikeERC20Transfer (errorPrefix, from, to, balance, transfer) {
+function shouldBehaveLikeERC420Transfer (errorPrefix, from, to, balance, transfer) {
   describe('when the recipient is not the zero address', function () {
     describe('when the sender does not have enough balance', function () {
       const amount = balance.addn(1);
@@ -250,7 +250,7 @@ function shouldBehaveLikeERC20Transfer (errorPrefix, from, to, balance, transfer
   });
 }
 
-function shouldBehaveLikeERC20Approve (errorPrefix, owner, spender, supply, approve) {
+function shouldBehaveLikeERC420Approve (errorPrefix, owner, spender, supply, approve) {
   describe('when the spender is not the zero address', function () {
     describe('when the sender has enough balance', function () {
       const amount = supply;
@@ -327,7 +327,7 @@ function shouldBehaveLikeERC20Approve (errorPrefix, owner, spender, supply, appr
 }
 
 module.exports = {
-  shouldBehaveLikeERC20,
-  shouldBehaveLikeERC20Transfer,
-  shouldBehaveLikeERC20Approve,
+  shouldBehaveLikeERC420,
+  shouldBehaveLikeERC420Transfer,
+  shouldBehaveLikeERC420Approve,
 };

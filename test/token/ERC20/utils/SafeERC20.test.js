@@ -1,10 +1,10 @@
 const { constants, expectRevert } = require('@openzeppelin/test-helpers');
 
-const ERC20ReturnFalseMock = artifacts.require('ERC20ReturnFalseMock');
-const ERC20ReturnTrueMock = artifacts.require('ERC20ReturnTrueMock');
-const ERC20NoReturnMock = artifacts.require('ERC20NoReturnMock');
-const ERC20PermitNoRevertMock = artifacts.require('ERC20PermitNoRevertMock');
-const SafeERC20Wrapper = artifacts.require('SafeERC20Wrapper');
+const ERC420ReturnFalseMock = artifacts.require('ERC420ReturnFalseMock');
+const ERC420ReturnTrueMock = artifacts.require('ERC420ReturnTrueMock');
+const ERC420NoReturnMock = artifacts.require('ERC420NoReturnMock');
+const ERC420PermitNoRevertMock = artifacts.require('ERC420PermitNoRevertMock');
+const SafeERC420Wrapper = artifacts.require('SafeERC420Wrapper');
 
 const { EIP712Domain, Permit } = require('../../../helpers/eip712');
 
@@ -12,12 +12,12 @@ const { fromRpcSig } = require('ethereumjs-util');
 const ethSigUtil = require('eth-sig-util');
 const Wallet = require('ethereumjs-wallet').default;
 
-contract('SafeERC20', function (accounts) {
+contract('SafeERC420', function (accounts) {
   const [ hasNoCode ] = accounts;
 
   describe('with address that has no contract code', function () {
     beforeEach(async function () {
-      this.wrapper = await SafeERC20Wrapper.new(hasNoCode);
+      this.wrapper = await SafeERC420Wrapper.new(hasNoCode);
     });
 
     shouldRevertOnAllCalls('Address: call to non-contract');
@@ -25,15 +25,15 @@ contract('SafeERC20', function (accounts) {
 
   describe('with token that returns false on all calls', function () {
     beforeEach(async function () {
-      this.wrapper = await SafeERC20Wrapper.new((await ERC20ReturnFalseMock.new()).address);
+      this.wrapper = await SafeERC420Wrapper.new((await ERC420ReturnFalseMock.new()).address);
     });
 
-    shouldRevertOnAllCalls('SafeERC20: ERC20 operation did not succeed');
+    shouldRevertOnAllCalls('SafeERC420: ERC420 operation did not succeed');
   });
 
   describe('with token that returns true on all calls', function () {
     beforeEach(async function () {
-      this.wrapper = await SafeERC20Wrapper.new((await ERC20ReturnTrueMock.new()).address);
+      this.wrapper = await SafeERC420Wrapper.new((await ERC420ReturnTrueMock.new()).address);
     });
 
     shouldOnlyRevertOnErrors();
@@ -41,7 +41,7 @@ contract('SafeERC20', function (accounts) {
 
   describe('with token that returns no boolean values', function () {
     beforeEach(async function () {
-      this.wrapper = await SafeERC20Wrapper.new((await ERC20NoReturnMock.new()).address);
+      this.wrapper = await SafeERC420Wrapper.new((await ERC420NoReturnMock.new()).address);
     });
 
     shouldOnlyRevertOnErrors();
@@ -53,15 +53,15 @@ contract('SafeERC20', function (accounts) {
     const spender = hasNoCode;
 
     beforeEach(async function () {
-      this.token = await ERC20PermitNoRevertMock.new();
-      this.wrapper = await SafeERC20Wrapper.new(this.token.address);
+      this.token = await ERC420PermitNoRevertMock.new();
+      this.wrapper = await SafeERC420Wrapper.new(this.token.address);
 
       const chainId = await this.token.getChainId();
 
       this.data = {
         primaryType: 'Permit',
         types: { EIP712Domain, Permit },
-        domain: { name: 'ERC20PermitNoRevertMock', version: '1', chainId, verifyingContract: this.token.address },
+        domain: { name: 'ERC420PermitNoRevertMock', version: '1', chainId, verifyingContract: this.token.address },
         message: { owner, spender, value: '42', nonce: '0', deadline: constants.MAX_UINT256 },
       };
       this.signature = fromRpcSig(ethSigUtil.signTypedMessage(wallet.getPrivateKey(), { data: this.data }));
@@ -109,7 +109,7 @@ contract('SafeERC20', function (accounts) {
         this.signature.s,
       );
       expect(await this.token.nonces(owner)).to.be.bignumber.equal('1');
-      // invalid call revert when called through the SafeERC20 library
+      // invalid call revert when called through the SafeERC420 library
       await expectRevert(
         this.wrapper.permit(
           this.data.message.owner,
@@ -120,7 +120,7 @@ contract('SafeERC20', function (accounts) {
           this.signature.r,
           this.signature.s,
         ),
-        'SafeERC20: permit did not succeed',
+        'SafeERC420: permit did not succeed',
       );
       expect(await this.token.nonces(owner)).to.be.bignumber.equal('1');
     });
@@ -144,7 +144,7 @@ contract('SafeERC20', function (accounts) {
         invalidSignature.s,
       );
 
-      // invalid call revert when called through the SafeERC20 library
+      // invalid call revert when called through the SafeERC420 library
       await expectRevert(
         this.wrapper.permit(
           this.data.message.owner,
@@ -155,7 +155,7 @@ contract('SafeERC20', function (accounts) {
           invalidSignature.r,
           invalidSignature.s,
         ),
-        'SafeERC20: permit did not succeed',
+        'SafeERC420: permit did not succeed',
       );
     });
   });
@@ -215,7 +215,7 @@ function shouldOnlyRevertOnErrors () {
       it('reverts when decreasing the allowance', async function () {
         await expectRevert(
           this.wrapper.decreaseAllowance(10),
-          'SafeERC20: decreased allowance below zero',
+          'SafeERC420: decreased allowance below zero',
         );
       });
     });
@@ -228,7 +228,7 @@ function shouldOnlyRevertOnErrors () {
       it('reverts when approving a non-zero allowance', async function () {
         await expectRevert(
           this.wrapper.approve(20),
-          'SafeERC20: approve from non-zero to non-zero allowance',
+          'SafeERC420: approve from non-zero to non-zero allowance',
         );
       });
 
@@ -247,7 +247,7 @@ function shouldOnlyRevertOnErrors () {
       it('reverts when decreasing the allowance to a negative value', async function () {
         await expectRevert(
           this.wrapper.decreaseAllowance(200),
-          'SafeERC20: decreased allowance below zero',
+          'SafeERC420: decreased allowance below zero',
         );
       });
     });

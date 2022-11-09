@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC20/extensions/ERC20FlashMint.sol)
+// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC420/extensions/ERC420FlashMint.sol)
 
 pragma solidity ^0.8.0;
 
 import "../../../interfaces/IERC3156FlashBorrower.sol";
 import "../../../interfaces/IERC3156FlashLender.sol";
-import "../ERC20.sol";
+import "../ERC420.sol";
 
 /**
  * @dev Implementation of the ERC3156 Flash loans extension, as defined in
@@ -16,7 +16,7 @@ import "../ERC20.sol";
  *
  * _Available since v4.1._
  */
-abstract contract ERC20FlashMint is ERC20, IERC3156FlashLender {
+abstract contract ERC420FlashMint is ERC420, IERC3156FlashLender {
     bytes32 private constant _RETURN_VALUE = keccak256("ERC3156FlashBorrower.onFlashLoan");
 
     /**
@@ -25,7 +25,7 @@ abstract contract ERC20FlashMint is ERC20, IERC3156FlashLender {
      * @return The amount of token that can be loaned.
      */
     function maxFlashLoan(address token) public view virtual override returns (uint256) {
-        return token == address(this) ? type(uint256).max - ERC20.totalSupply() : 0;
+        return token == address(this) ? type(uint256).max - ERC420.totalSupply() : 0;
     }
 
     /**
@@ -37,7 +37,7 @@ abstract contract ERC20FlashMint is ERC20, IERC3156FlashLender {
      * @return The fees applied to the corresponding flash loan.
      */
     function flashFee(address token, uint256 amount) public view virtual override returns (uint256) {
-        require(token == address(this), "ERC20FlashMint: wrong token");
+        require(token == address(this), "ERC420FlashMint: wrong token");
         return _flashFee(token, amount);
     }
 
@@ -89,12 +89,12 @@ abstract contract ERC20FlashMint is ERC20, IERC3156FlashLender {
         uint256 amount,
         bytes calldata data
     ) public virtual override returns (bool) {
-        require(amount <= maxFlashLoan(token), "ERC20FlashMint: amount exceeds maxFlashLoan");
+        require(amount <= maxFlashLoan(token), "ERC420FlashMint: amount exceeds maxFlashLoan");
         uint256 fee = flashFee(token, amount);
         _mint(address(receiver), amount);
         require(
             receiver.onFlashLoan(msg.sender, token, amount, fee, data) == _RETURN_VALUE,
-            "ERC20FlashMint: invalid return value"
+            "ERC420FlashMint: invalid return value"
         );
         address flashFeeReceiver = _flashFeeReceiver();
         _spendAllowance(address(receiver), address(this), amount + fee);

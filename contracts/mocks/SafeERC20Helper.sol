@@ -3,14 +3,14 @@
 pragma solidity ^0.8.0;
 
 import "../utils/Context.sol";
-import "../token/ERC20/IERC20.sol";
-import "../token/ERC20/extensions/ERC20Permit.sol";
-import "../token/ERC20/utils/SafeERC20.sol";
+import "../token/ERC420/IERC420.sol";
+import "../token/ERC420/extensions/ERC420Permit.sol";
+import "../token/ERC420/utils/SafeERC420.sol";
 
-contract ERC20ReturnFalseMock is Context {
+contract ERC420ReturnFalseMock is Context {
     uint256 private _allowance;
 
-    // IERC20's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
+    // IERC420's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
     // we write to a dummy state variable.
     uint256 private _dummy;
 
@@ -39,10 +39,10 @@ contract ERC20ReturnFalseMock is Context {
     }
 }
 
-contract ERC20ReturnTrueMock is Context {
+contract ERC420ReturnTrueMock is Context {
     mapping(address => uint256) private _allowances;
 
-    // IERC20's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
+    // IERC420's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
     // we write to a dummy state variable.
     uint256 private _dummy;
 
@@ -74,10 +74,10 @@ contract ERC20ReturnTrueMock is Context {
     }
 }
 
-contract ERC20NoReturnMock is Context {
+contract ERC420NoReturnMock is Context {
     mapping(address => uint256) private _allowances;
 
-    // IERC20's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
+    // IERC420's functions are not pure, but these mock implementations are: to prevent Solidity from issuing warnings,
     // we write to a dummy state variable.
     uint256 private _dummy;
 
@@ -106,9 +106,9 @@ contract ERC20NoReturnMock is Context {
     }
 }
 
-contract ERC20PermitNoRevertMock is
-    ERC20("ERC20PermitNoRevertMock", "ERC20PermitNoRevertMock"),
-    ERC20Permit("ERC20PermitNoRevertMock")
+contract ERC420PermitNoRevertMock is
+    ERC420("ERC420PermitNoRevertMock", "ERC420PermitNoRevertMock"),
+    ERC420Permit("ERC420PermitNoRevertMock")
 {
     function getChainId() external view returns (uint256) {
         return block.chainid;
@@ -143,12 +143,12 @@ contract ERC20PermitNoRevertMock is
     }
 }
 
-contract SafeERC20Wrapper is Context {
-    using SafeERC20 for IERC20;
+contract SafeERC420Wrapper is Context {
+    using SafeERC420 for IERC420;
 
-    IERC20 private _token;
+    IERC420 private _token;
 
-    constructor(IERC20 token) {
+    constructor(IERC420 token) {
         _token = token;
     }
 
@@ -181,11 +181,11 @@ contract SafeERC20Wrapper is Context {
         bytes32 r,
         bytes32 s
     ) public {
-        SafeERC20.safePermit(IERC20Permit(address(_token)), owner, spender, value, deadline, v, r, s);
+        SafeERC420.safePermit(IERC420Permit(address(_token)), owner, spender, value, deadline, v, r, s);
     }
 
     function setAllowance(uint256 allowance_) public {
-        ERC20ReturnTrueMock(address(_token)).setAllowance(allowance_);
+        ERC420ReturnTrueMock(address(_token)).setAllowance(allowance_);
     }
 
     function allowance() public view returns (uint256) {

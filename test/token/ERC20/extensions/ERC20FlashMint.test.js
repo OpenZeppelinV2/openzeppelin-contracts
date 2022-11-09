@@ -4,10 +4,10 @@ const { BN, constants, expectEvent, expectRevert, time } = require('@openzeppeli
 const { expect } = require('chai');
 const { MAX_UINT256, ZERO_ADDRESS, ZERO_BYTES32 } = constants;
 
-const ERC20FlashMintMock = artifacts.require('ERC20FlashMintMock');
+const ERC420FlashMintMock = artifacts.require('ERC420FlashMintMock');
 const ERC3156FlashBorrowerMock = artifacts.require('ERC3156FlashBorrowerMock');
 
-contract('ERC20FlashMint', function (accounts) {
+contract('ERC420FlashMint', function (accounts) {
   const [initialHolder, other, anotherAccount] = accounts;
 
   const name = 'My Token';
@@ -17,7 +17,7 @@ contract('ERC20FlashMint', function (accounts) {
   const loanAmount = new BN(10000000000000);
 
   beforeEach(async function () {
-    this.token = await ERC20FlashMintMock.new(name, symbol, initialHolder, initialSupply);
+    this.token = await ERC420FlashMintMock.new(name, symbol, initialHolder, initialSupply);
   });
 
   describe('maxFlashLoan', function () {
@@ -36,7 +36,7 @@ contract('ERC20FlashMint', function (accounts) {
     });
 
     it('token mismatch', async function () {
-      await expectRevert(this.token.flashFee(ZERO_ADDRESS, loanAmount), 'ERC20FlashMint: wrong token');
+      await expectRevert(this.token.flashFee(ZERO_ADDRESS, loanAmount), 'ERC420FlashMint: wrong token');
     });
   });
 
@@ -65,7 +65,7 @@ contract('ERC20FlashMint', function (accounts) {
       const receiver = await ERC3156FlashBorrowerMock.new(false, true);
       await expectRevert(
         this.token.flashLoan(receiver.address, this.token.address, loanAmount, '0x'),
-        'ERC20FlashMint: invalid return value',
+        'ERC420FlashMint: invalid return value',
       );
     });
 
@@ -73,7 +73,7 @@ contract('ERC20FlashMint', function (accounts) {
       const receiver = await ERC3156FlashBorrowerMock.new(true, false);
       await expectRevert(
         this.token.flashLoan(receiver.address, this.token.address, loanAmount, '0x'),
-        'ERC20: insufficient allowance',
+        'ERC420: insufficient allowance',
       );
     });
 
@@ -82,7 +82,7 @@ contract('ERC20FlashMint', function (accounts) {
       const data = this.token.contract.methods.transfer(other, 10).encodeABI();
       await expectRevert(
         this.token.flashLoan(receiver.address, this.token.address, loanAmount, data),
-        'ERC20: burn amount exceeds balance',
+        'ERC420: burn amount exceeds balance',
       );
     });
 

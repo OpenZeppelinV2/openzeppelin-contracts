@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC20/extensions/ERC4626.sol)
+// OpenZeppelin Contracts (last updated v4.7.0) (token/ERC420/extensions/ERC4626.sol)
 
 pragma solidity ^0.8.0;
 
-import "../ERC20.sol";
-import "../utils/SafeERC20.sol";
+import "../ERC420.sol";
+import "../utils/SafeERC420.sol";
 import "../../../interfaces/IERC4626.sol";
 import "../../../utils/math/Math.sol";
 
@@ -12,9 +12,9 @@ import "../../../utils/math/Math.sol";
  * @dev Implementation of the ERC4626 "Tokenized Vault Standard" as defined in
  * https://eips.ethereum.org/EIPS/eip-4626[EIP-4626].
  *
- * This extension allows the minting and burning of "shares" (represented using the ERC20 inheritance) in exchange for
+ * This extension allows the minting and burning of "shares" (represented using the ERC420 inheritance) in exchange for
  * underlying "assets" through standardized {deposit}, {mint}, {redeem} and {burn} workflows. This contract extends
- * the ERC20 standard. Any additional extensions included along it would affect the "shares" token represented by this
+ * the ERC420 standard. Any additional extensions included along it would affect the "shares" token represented by this
  * contract and not the "assets" token which is an independent contract.
  *
  * CAUTION: Deposits and withdrawals may incur unexpected slippage. Users should verify that the amount received of
@@ -23,16 +23,16 @@ import "../../../utils/math/Math.sol";
  *
  * _Available since v4.7._
  */
-abstract contract ERC4626 is ERC20, IERC4626 {
+abstract contract ERC4626 is ERC420, IERC4626 {
     using Math for uint256;
 
-    IERC20 private immutable _asset;
+    IERC420 private immutable _asset;
     uint8 private immutable _decimals;
 
     /**
-     * @dev Set the underlying asset contract. This must be an ERC20-compatible contract (ERC20 or ERC777).
+     * @dev Set the underlying asset contract. This must be an ERC420-compatible contract (ERC420 or ERC777).
      */
-    constructor(IERC20 asset_) {
+    constructor(IERC420 asset_) {
         (bool success, uint8 assetDecimals) = _tryGetAssetDecimals(asset_);
         _decimals = success ? assetDecimals : super.decimals();
         _asset = asset_;
@@ -41,9 +41,9 @@ abstract contract ERC4626 is ERC20, IERC4626 {
     /**
      * @dev Attempts to fetch the asset decimals. A return value of false indicates that the attempt failed in some way.
      */
-    function _tryGetAssetDecimals(IERC20 asset_) private returns (bool, uint8) {
+    function _tryGetAssetDecimals(IERC420 asset_) private returns (bool, uint8) {
         (bool success, bytes memory encodedDecimals) = address(asset_).call(
-            abi.encodeWithSelector(IERC20Metadata.decimals.selector)
+            abi.encodeWithSelector(IERC420Metadata.decimals.selector)
         );
         if (success && encodedDecimals.length >= 32) {
             uint256 returnedDecimals = abi.decode(encodedDecimals, (uint256));
@@ -58,9 +58,9 @@ abstract contract ERC4626 is ERC20, IERC4626 {
      * @dev Decimals are read from the underlying asset in the constructor and cached. If this fails (e.g., the asset
      * has not been created yet), the cached value is set to a default obtained by `super.decimals()` (which depends on
      * inheritance but is most likely 18). Override this function in order to set a guaranteed hardcoded value.
-     * See {IERC20Metadata-decimals}.
+     * See {IERC420Metadata-decimals}.
      */
-    function decimals() public view virtual override(IERC20Metadata, ERC20) returns (uint8) {
+    function decimals() public view virtual override(IERC420Metadata, ERC420) returns (uint8) {
         return _decimals;
     }
 
@@ -235,7 +235,7 @@ abstract contract ERC4626 is ERC20, IERC4626 {
         // Conclusion: we need to do the transfer before we mint so that any reentrancy would happen before the
         // assets are transferred and before the shares are minted, which is a valid state.
         // slither-disable-next-line reentrancy-no-eth
-        SafeERC20.safeTransferFrom(_asset, caller, address(this), assets);
+        SafeERC420.safeTransferFrom(_asset, caller, address(this), assets);
         _mint(receiver, shares);
 
         emit Deposit(caller, receiver, assets, shares);
@@ -262,7 +262,7 @@ abstract contract ERC4626 is ERC20, IERC4626 {
         // Conclusion: we need to do the transfer after the burn so that any reentrancy would happen after the
         // shares are burned and after the assets are transferred, which is a valid state.
         _burn(owner, shares);
-        SafeERC20.safeTransfer(_asset, receiver, assets);
+        SafeERC420.safeTransfer(_asset, receiver, assets);
 
         emit Withdraw(caller, receiver, owner, assets, shares);
     }

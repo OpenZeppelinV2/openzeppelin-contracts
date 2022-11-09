@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../token/ERC20/utils/SafeERC20.sol";
+import "../token/ERC420/utils/SafeERC420.sol";
 import "../utils/Address.sol";
 import "../utils/Context.sol";
 
@@ -21,14 +21,14 @@ import "../utils/Context.sol";
  * accounts but kept in this contract, and the actual transfer is triggered as a separate step by calling the {release}
  * function.
  *
- * NOTE: This contract assumes that ERC20 tokens will behave similarly to native tokens (Ether). Rebasing tokens, and
+ * NOTE: This contract assumes that ERC420 tokens will behave similarly to native tokens (Ether). Rebasing tokens, and
  * tokens that apply fees during transfers, are likely to not be supported as expected. If in doubt, we encourage you
  * to run tests before sending real value to this contract.
  */
 contract PaymentSplitter is Context {
     event PayeeAdded(address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
-    event ERC20PaymentReleased(IERC20 indexed token, address to, uint256 amount);
+    event ERC420PaymentReleased(IERC420 indexed token, address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
 
     uint256 private _totalShares;
@@ -38,8 +38,8 @@ contract PaymentSplitter is Context {
     mapping(address => uint256) private _released;
     address[] private _payees;
 
-    mapping(IERC20 => uint256) private _erc20TotalReleased;
-    mapping(IERC20 => mapping(address => uint256)) private _erc20Released;
+    mapping(IERC420 => uint256) private _erc20TotalReleased;
+    mapping(IERC420 => mapping(address => uint256)) private _erc20Released;
 
     /**
      * @dev Creates an instance of `PaymentSplitter` where each account in `payees` is assigned the number of shares at
@@ -85,10 +85,10 @@ contract PaymentSplitter is Context {
     }
 
     /**
-     * @dev Getter for the total amount of `token` already released. `token` should be the address of an IERC20
+     * @dev Getter for the total amount of `token` already released. `token` should be the address of an IERC420
      * contract.
      */
-    function totalReleased(IERC20 token) public view returns (uint256) {
+    function totalReleased(IERC420 token) public view returns (uint256) {
         return _erc20TotalReleased[token];
     }
 
@@ -108,9 +108,9 @@ contract PaymentSplitter is Context {
 
     /**
      * @dev Getter for the amount of `token` tokens already released to a payee. `token` should be the address of an
-     * IERC20 contract.
+     * IERC420 contract.
      */
-    function released(IERC20 token, address account) public view returns (uint256) {
+    function released(IERC420 token, address account) public view returns (uint256) {
         return _erc20Released[token][account];
     }
 
@@ -131,9 +131,9 @@ contract PaymentSplitter is Context {
 
     /**
      * @dev Getter for the amount of payee's releasable `token` tokens. `token` should be the address of an
-     * IERC20 contract.
+     * IERC420 contract.
      */
-    function releasable(IERC20 token, address account) public view returns (uint256) {
+    function releasable(IERC420 token, address account) public view returns (uint256) {
         uint256 totalReceived = token.balanceOf(address(this)) + totalReleased(token);
         return _pendingPayment(account, totalReceived, released(token, account));
     }
@@ -162,10 +162,10 @@ contract PaymentSplitter is Context {
 
     /**
      * @dev Triggers a transfer to `account` of the amount of `token` tokens they are owed, according to their
-     * percentage of the total shares and their previous withdrawals. `token` must be the address of an IERC20
+     * percentage of the total shares and their previous withdrawals. `token` must be the address of an IERC420
      * contract.
      */
-    function release(IERC20 token, address account) public virtual {
+    function release(IERC420 token, address account) public virtual {
         require(_shares[account] > 0, "PaymentSplitter: account has no shares");
 
         uint256 payment = releasable(token, account);
@@ -180,8 +180,8 @@ contract PaymentSplitter is Context {
             _erc20Released[token][account] += payment;
         }
 
-        SafeERC20.safeTransfer(token, account, payment);
-        emit ERC20PaymentReleased(token, account, payment);
+        SafeERC420.safeTransfer(token, account, payment);
+        emit ERC420PaymentReleased(token, account, payment);
     }
 
     /**
