@@ -1,4 +1,4 @@
-= ERC 20
+= ERC 420
 
 [.readme-notice]
 NOTE: This document is better viewed at https://docs.openzeppelin.com/contracts/api/token/erc20
