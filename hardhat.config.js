@@ -1,106 +1,166 @@
-/// ENVVAR
-// - CI:                output gas report to file instead of stdout
-// - COVERAGE:          enable coverage report
-// - ENABLE_GAS_REPORT: enable gas report
-// - COMPILE_MODE:      production modes enables optimizations (default: development)
-// - COMPILE_VERSION:   compiler version (default: 0.8.9)
-// - COINMARKETCAP:     coinmarkercat api key for USD value in gas report
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-truffle5");
+require("@nomiclabs/hardhat-etherscan");
+require("hardhat-deploy");
 
-const fs = require('fs');
-const path = require('path');
-const argv = require('yargs/yargs')()
-  .env('')
-  .options({
-    coverage: {
-      type: 'boolean',
-      default: false,
-    },
-    gas: {
-      alias: 'enableGasReport',
-      type: 'boolean',
-      default: false,
-    },
-    gasReport: {
-      alias: 'enableGasReportPath',
-      type: 'string',
-      implies: 'gas',
-      default: undefined,
-    },
-    mode: {
-      alias: 'compileMode',
-      type: 'string',
-      choices: [ 'production', 'development' ],
-      default: 'development',
-    },
-    ir: {
-      alias: 'enableIR',
-      type: 'boolean',
-      default: false,
-    },
-    compiler: {
-      alias: 'compileVersion',
-      type: 'string',
-      default: '0.8.13',
-    },
-    coinmarketcap: {
-      alias: 'coinmarketcapApiKey',
-      type: 'string',
-    },
-  })
-  .argv;
+require("dotenv").config();
 
-require('@nomiclabs/hardhat-truffle5');
-require('hardhat-ignore-warnings');
+const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL;
+const G_RPC_URL = process.env.G_RPC_URL;
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
+const BSC_API = process.env.BSC_API;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const BSCTEST_RPC_URL = process.env.BSCTEST_RPC_URL;
+const BSC_URL = process.env.BSC_URL;
 
-require('solidity-docgen');
-
-if (argv.gas) {
-  require('hardhat-gas-reporter');
-}
-
-for (const f of fs.readdirSync(path.join(__dirname, 'hardhat'))) {
-  require(path.join(__dirname, 'hardhat', f));
-}
-
-const withOptimizations = argv.gas || argv.compileMode === 'production';
-
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
 module.exports = {
-  solidity: {
-    version: argv.compiler,
-    settings: {
-      optimizer: {
-        enabled: withOptimizations,
-        runs: 200,
-      },
-      viaIR: withOptimizations && argv.ir,
-    },
-  },
-  warnings: {
-    '*': {
-      'code-size': withOptimizations,
-      'unused-param': !argv.coverage, // coverage causes unused-param warnings
-      default: 'error',
-    },
-  },
+  defaultNetwork: "g",
   networks: {
     hardhat: {
-      blockGasLimit: 10000000,
-      allowUnlimitedContractSize: !withOptimizations,
+      // If you want to do some forking, uncomment this
+      forking: {
+        url: "https://eth-mainnet.alchemyapi.io/v2/5SUKt3iWyki7QYJ2nlfcGKEXfBZ3IS_d",
+      },
+    },
+    localhost: {},
+    bscTest: {
+      url: BSCTEST_RPC_URL,
+      gasPrice: 50000000000,
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+    },
+    bsc: {
+      url: BSC_URL,
+      gasPrice: 50000000000,
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+    },
+    g: {
+      url: G_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
+    },
+    mainnet: {
+      url: MAINNET_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      saveDeployments: true,
     },
   },
+
   gasReporter: {
-    showMethodSig: true,
-    currency: 'USD',
-    outputFile: argv.gasReport,
-    coinmarketcap: argv.coinmarketcap,
+    currency: "USD",
+    gasPrice: 21,
   },
-  docgen: require('./docs/config'),
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: ETHERSCAN_API_KEY,
+  },
+
+  solidity: {
+    compilers: [
+      //  {
+      //      version: "0.8.9"
+      //  },
+
+      {
+        version: "0.8.13",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.15",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },     
+       {
+        version: "0.8.7",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.6.6",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+
+      {
+        version: "0.8.10",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.4.23",
+      },
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.5.16",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
+  },
 };
 
-if (argv.coverage) {
-  require('solidity-coverage');
-  module.exports.networks.hardhat.initialBaseFeePerGas = 0;
-}
+// npx hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/5SUKt3iWyki7QYJ2nlfcGKEXfBZ3IS_d

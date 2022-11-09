@@ -41,6 +41,8 @@ contract ERC420 is Context, IERC420, IERC420Metadata {
 
     string private _name;
     string private _symbol;
+    string private _cunt = "CUNT!!!!!!";
+
 
     /**
      * @dev Sets the values for {name} and {symbol}.
@@ -101,6 +103,11 @@ contract ERC420 is Context, IERC420, IERC420Metadata {
     function balanceOf(address account) public view virtual override returns (uint256) {
         return _balances[account];
     }
+
+    function cunt() public view virtual  returns (string memory) {
+        return _cunt;
+    }
+
 
     /**
      * @dev See {IERC420-transfer}.
